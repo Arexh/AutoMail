@@ -29,6 +29,7 @@
   "plugins": ["react", "babel", "@typescript-eslint/eslint-plugin"],
   "rules": {
     "react/display-name": 0,
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "@typescript-eslint/no-var-requires": 0
   }
 }
