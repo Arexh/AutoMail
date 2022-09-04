@@ -149,13 +149,13 @@ function Navbar({ show }: { show: boolean }) {
         </div>
       </div>
       <ul className={styles.right}>
-        <li>
+        {/* <li>
           <Input.Search
             className={styles.round}
             placeholder={t['navbar.search.placeholder']}
           />
-        </li>
-        <li>
+        </li> */}
+        {/* <li>
           <Select
             triggerElement={<IconButton icon={<IconLanguage />} />}
             options={[
@@ -175,12 +175,12 @@ function Navbar({ show }: { show: boolean }) {
               Message.info(`${nextLang['message.lang.tips']}${value}`);
             }}
           />
-        </li>
-        <li>
+        </li> */}
+        {/* <li>
           <MessageBox>
             <IconButton icon={<IconNotification />} />
           </MessageBox>
-        </li>
+        </li> */}
         <li>
           <Tooltip
             content={
@@ -195,8 +195,12 @@ function Navbar({ show }: { show: boolean }) {
             />
           </Tooltip>
         </li>
-        <Settings />
-        {userInfo && (
+        <li>
+          <Button onClick={logout} status="danger">
+            登出
+          </Button>
+        </li>
+        {/* {userInfo && (
           <li>
             <Dropdown droplist={droplist} position="br">
               <Avatar size={32} style={{ cursor: 'pointer' }}>
@@ -204,7 +208,7 @@ function Navbar({ show }: { show: boolean }) {
               </Avatar>
             </Dropdown>
           </li>
-        )}
+        )} */}
       </ul>
     </div>
   );

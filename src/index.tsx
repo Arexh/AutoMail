@@ -15,6 +15,9 @@ import checkLogin from './utils/checkLogin';
 import changeTheme from './utils/changeTheme';
 import useStorage from './utils/useStorage';
 import zhiHuiTuanJianApi from './api/zhiHuiTuanJian';
+import { GlobalState } from './store';
+import { generate, getRgbStr } from '@arco-design/color';
+import { useSelector } from 'react-redux';
 // import './mock';
 
 const store = createStore(rootReducer);
@@ -23,6 +26,15 @@ function Index() {
   const [lang, setLang] = useStorage('arco-lang', 'zh-CN');
   const [theme, setTheme] = useStorage('arco-theme', 'light');
   const [_, setUserStatus] = useStorage('userStatus');
+
+  const newList = generate('#6a3596', {
+    list: true,
+    dark: theme === 'dark',
+  });
+  newList.forEach((l, index) => {
+    const rgbStr = getRgbStr(l);
+    document.body.style.setProperty(`--arcoblue-${index + 1}`, rgbStr);
+  });
 
   function getArcoLocale() {
     switch (lang) {
