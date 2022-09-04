@@ -192,7 +192,11 @@ function SearchTable() {
 
   return (
     <Card>
-      <Title heading={6}>{t['menu.list.searchTable']}</Title>
+      <Title heading={6}>第三步：导入、查看成员列表</Title>
+      <div style={{ marginBottom: 20 }}>
+        导入关联学生姓名和学生邮箱的Excel (格式为姓名 - 邮箱 - 政治面貌),
+        不支持重名学生(需手动发邮件):
+      </div>
       <SearchForm
         searchInputRef={searchInputRef}
         onDeleteTable={onDeleteTable}

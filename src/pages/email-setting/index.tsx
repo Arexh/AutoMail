@@ -207,7 +207,7 @@ function Example() {
           }}
         >
           <Title heading={6}>第二步：邮件模板（必填）</Title>
-          收件人收到的内容：
+          未完成大学习的成员将收到以下内容：
           <div style={{ marginTop: 16 }}>
             <Editor defaultValue="" />
           </div>
