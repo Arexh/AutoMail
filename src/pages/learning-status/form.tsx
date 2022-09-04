@@ -1,0 +1,178 @@
+import React, { useContext, useState, useCallback, useEffect } from 'react';
+import dayjs from 'dayjs';
+import {
+  Form,
+  Select,
+  DatePicker,
+  Button,
+  Grid,
+  Popconfirm,
+} from '@arco-design/web-react';
+import { GlobalContext } from '@/context';
+import locale from './locale';
+import useLocale from '@/utils/useLocale';
+import {
+  IconRefresh,
+  IconSearch,
+  IconEmail,
+} from '@arco-design/web-react/icon';
+import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
+import styles from './style/index.module.less';
+
+const { Row, Col } = Grid;
+const { useForm } = Form;
+
+function SearchForm(props: {
+  onSearch: (values: Record<string, any>) => void;
+  onSendEmail: () => void;
+  getUnCompleteCount: () => any;
+  setDataName: (string) => void;
+  getDataName: () => string;
+}) {
+  const { lang } = useContext(GlobalContext);
+
+  const t = useLocale(locale);
+  const [form] = useForm();
+
+  const handleSubmit = (e) => {
+    const values = form.getFieldsValue();
+    const date = values['date'];
+    delete values['date'];
+    if (options.length > 0 && options[0]['value'] == values['chapterId']) {
+      props.setDataName(options[0]['label']);
+    } else {
+      props.setDataName('');
+    }
+    props.onSearch({
+      beginTime: date ? date['begin'] : undefined,
+      endTime: date ? date['end'] : undefined,
+      ...values,
+    });
+  };
+
+  const handleReset = () => {
+    form.resetFields();
+    props.onSearch({});
+  };
+
+  const handleSendEmail = () => {
+    props.onSendEmail();
+  };
+
+  const colSpan = lang === 'zh-CN' ? 8 : 12;
+  const [options, setOptions] = useState([]);
+
+  const fetchChapter = useCallback(() => {
+    zhiHuiTuanJianApi.getDaXueXiChapter().then((res) => {
+      setOptions(
+        res.data.data.list.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }))
+      );
+    });
+  }, [options]);
+
+  const ifCompleteOptions = [
+    {
+      label: '全部',
+      value: 'all',
+    },
+    {
+      label: '已完成',
+      value: 'complete',
+    },
+    {
+      label: '未完成',
+      value: 'incomplete',
+    },
+  ];
+
+  useEffect(() => {
+    if (options.length != 0) {
+      if (form.getFieldValue('chapterId') == null) {
+        form.setFieldValue('chapterId', options[0]['value']);
+        props.setDataName(options[0]['label']);
+      }
+      return;
+    }
+    zhiHuiTuanJianApi.getDaXueXiChapter().then((res) => {
+      setOptions(
+        res.data.data.list.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }))
+      );
+      form.setFieldValue('chapterId', options[0]['value']);
+      props.setDataName(res.data.data.list[0].name);
+    });
+  }, [options]);
+
+  return (
+    <div className={styles['search-form-wrapper']}>
+      <Form
+        form={form}
+        className={styles['search-form']}
+        labelAlign="left"
+        labelCol={{ span: 7 }}
+        wrapperCol={{ span: 16 }}
+      >
+        <Row gutter={24}>
+          <Col span={colSpan}>
+            <Form.Item label={'大学习期数'} field="chapterId">
+              <Select
+                placeholder={'选择大学习期数'}
+                onFocus={fetchChapter}
+                onChange={handleSubmit}
+                options={options}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={10}>
+            <Form.Item
+              label={'完成时间'}
+              field="date"
+              normalize={(value) => {
+                return { begin: value && value[0], end: value && value[1] };
+              }}
+              formatter={(value) => {
+                return value && value.begin ? [value.begin, value.end] : [];
+              }}
+            >
+              <DatePicker.RangePicker
+                allowClear
+                onChange={handleSubmit}
+                style={{ width: '100%' }}
+                disabledDate={(date) => dayjs(date).isAfter(dayjs())}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label={'是否完成'} field="ifComplete">
+              <Select
+                placeholder={'过滤完成状态'}
+                onChange={handleSubmit}
+                options={ifCompleteOptions}
+                allowClear
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+      <div className={styles['right-button']}>
+        <Popconfirm
+          title={`是否确定向未学习的${props.getUnCompleteCount()}个同学发送邮件?`}
+          onOk={handleSendEmail}
+        >
+          {props.getDataName() != '' && (
+            <Button type="primary" icon={<IconEmail />}>
+              向未学习同学发送邮件
+            </Button>
+          )}
+        </Popconfirm>
+      </div>
+    </div>
+  );
+}
+
+export default SearchForm;

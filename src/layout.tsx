@@ -7,6 +7,7 @@ import {
   IconEmail,
   IconMenuFold,
   IconMenuUnfold,
+  IconSelectAll,
   IconUserGroup,
 } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
@@ -35,6 +36,8 @@ function getIconFromKey(key) {
       return <IconEmail className={styles.icon} />;
     case 'member-table':
       return <IconUserGroup className={styles.icon} />;
+    case 'learning-status':
+      return <IconSelectAll className={styles.icon} />;
     default:
       return <div className={styles['icon-empty']} />;
   }

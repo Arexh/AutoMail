@@ -13,7 +13,7 @@ import useStorage from '@/utils/useStorage';
 import useLocale from '@/utils/useLocale';
 import locale from './locale';
 import styles from './style/index.module.less';
-import zhiHuiTuanJianApi from '../../api/zhiHuiTuanJian';
+import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
 
 export default function LoginForm() {
   const formRef = useRef<FormInstance>();

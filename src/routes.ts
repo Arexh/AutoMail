@@ -24,6 +24,10 @@ export const routes: IRoute[] = [
     name: '成员列表',
     key: 'member-table',
   },
+  {
+    name: '学习情况',
+    key: 'learning-status',
+  },
 ];
 
 export const getName = (path: string, routes) => {

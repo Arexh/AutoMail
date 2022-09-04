@@ -196,6 +196,9 @@ function SearchTable() {
       <div style={{ marginBottom: 20 }}>
         导入关联学生姓名和学生邮箱的Excel (格式为姓名 - 邮箱 - 政治面貌),
         不支持重名学生(需手动发邮件):
+        <span style={{ float: 'right', fontSize: 16 }}>
+          目前共有 <b>{members ? members.length : '-'}</b> 条数据
+        </span>
       </div>
       <SearchForm
         searchInputRef={searchInputRef}
