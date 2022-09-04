@@ -59,25 +59,7 @@ function Index() {
       store.dispatch({
         type: 'update-userInfo',
         payload: {
-          userInfo: {
-            name: data.username,
-            avatar:
-              'https://lf1-xgcdn-tos.pstatp.com/obj/vcloud/vadmin/start.8e0e4855ee346a46ccff8ff3e24db27b.png',
-            email: data.email,
-            job: 'frontend',
-            jobName: '前端开发工程师',
-            organization: data.detailName,
-            organizationName: '前端',
-            location: 'beijing',
-            locationName: '北京',
-            introduction: '王力群并非是一个真实存在的人。',
-            personalWebsite: 'https://www.arco.design',
-            verified: true,
-            phoneNumber: data.mobile,
-            accountId: data.oid,
-            registrationTime: data.createTime,
-            permissions: 'admin',
-          },
+          userInfo: res.data.account,
           userLoading: false,
         },
       });

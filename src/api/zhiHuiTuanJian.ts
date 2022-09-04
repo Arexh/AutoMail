@@ -65,13 +65,13 @@ zhiHuiTuanJianApi.getDaXueXiUrl = () => {
   });
 };
 
-zhiHuiTuanJianApi.getDaXueXiTable = (date, chapterId, pageSize = 9999) => {
+zhiHuiTuanJianApi.getDaXueXiTable = (oid, date, chapterId, pageSize = 9999) => {
   console.log(chapterId);
   return service({
     url: `/api/qingniandaxuexi/apibackend/admin/young/organize/userList`,
     method: 'get',
     params: {
-      organizedId: 15279912,
+      organizedId: oid,
       pageNo: 1,
       pageSize: pageSize,
       beginTime: date ? date.begin : undefined,
@@ -84,12 +84,12 @@ zhiHuiTuanJianApi.getDaXueXiTable = (date, chapterId, pageSize = 9999) => {
   });
 };
 
-zhiHuiTuanJianApi.getDaXueXiTable = (params) => {
+zhiHuiTuanJianApi.getDaXueXiTable = (oid, params) => {
   return service({
     url: `/api/qingniandaxuexi/apibackend/admin/young/organize/userList`,
     method: 'get',
     params: {
-      organizedId: 15279912,
+      organizedId: oid,
       ...params,
     },
     headers: {

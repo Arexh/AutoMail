@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   Card,
@@ -6,8 +6,6 @@ import {
   Typography,
   Tag,
   Popover,
-  Notification,
-  Message,
 } from '@arco-design/web-react';
 import useLocale from '@/utils/useLocale';
 import SearchForm from './form';
@@ -15,6 +13,7 @@ import locale from './locale';
 import isElectron from 'is-electron';
 import { zhiHuiTuanJianDb } from '@/db/zhiHuiTuanJianDb';
 import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
+import { useSelector } from 'react-redux';
 
 const { Title } = Typography;
 const columns = [
@@ -122,6 +121,7 @@ function SearchTable() {
   const [loading, setLoading] = useState(true);
   const [formParams, setFormParams] = useState({});
   const [dataName, setDataName] = useState('');
+  const userInfo = useSelector((state: any) => state.userInfo || {});
 
   useEffect(() => {
     fetchData();
@@ -140,7 +140,7 @@ function SearchTable() {
     setLoading(true);
     console.log(formParams);
     zhiHuiTuanJianApi
-      .getDaXueXiTable({
+      .getDaXueXiTable(userInfo.oid, {
         pageNo: current,
         pageSize: pageSize,
         ...formParams,
