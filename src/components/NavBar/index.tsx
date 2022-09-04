@@ -35,6 +35,7 @@ import styles from './style/index.module.less';
 import defaultLocale from '@/locale';
 import useStorage from '@/utils/useStorage';
 import { generatePermission } from '@/routes';
+import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
 
 function Navbar({ show }: { show: boolean }) {
   const t = useLocale();
@@ -47,8 +48,12 @@ function Navbar({ show }: { show: boolean }) {
   const { setLang, lang, theme, setTheme } = useContext(GlobalContext);
 
   function logout() {
-    setUserStatus('logout');
-    window.location.href = '/login';
+    zhiHuiTuanJianApi.logout().then((res) => {
+      console.log('Logout');
+      console.log(res);
+      setUserStatus('logout');
+      window.location.href = '/login';
+    });
   }
 
   function onMenuItemClick(key) {

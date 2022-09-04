@@ -23,8 +23,8 @@ export const routes: IRoute[] = [
     ],
   },
   {
-    name: 'Example',
-    key: 'example',
+    name: '邮箱设置',
+    key: 'email-setting',
   },
 ];
 

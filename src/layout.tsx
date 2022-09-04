@@ -4,7 +4,7 @@ import { Layout, Menu, Breadcrumb, Spin } from '@arco-design/web-react';
 import cs from 'classnames';
 import {
   IconDashboard,
-  IconTag,
+  IconEmail,
   IconMenuFold,
   IconMenuUnfold,
 } from '@arco-design/web-react/icon';
@@ -30,8 +30,8 @@ function getIconFromKey(key) {
   switch (key) {
     case 'dashboard':
       return <IconDashboard className={styles.icon} />;
-    case 'example':
-      return <IconTag className={styles.icon} />;
+    case 'email-setting':
+      return <IconEmail className={styles.icon} />;
     default:
       return <div className={styles['icon-empty']} />;
   }

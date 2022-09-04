@@ -115,10 +115,7 @@ export default function LoginForm() {
 
   return (
     <div className={styles['login-form-wrapper']}>
-      <div className={styles['login-form-title']}>{t['login.form.title']}</div>
-      <div className={styles['login-form-sub-title']}>
-        {t['login.form.title']}
-      </div>
+      <div className={styles['login-form-title']}>智慧团建登录</div>
       <div className={styles['login-form-error-msg']}>{errorMessage}</div>
       <Form className={styles['login-form']} layout="vertical" ref={formRef}>
         <Form.Item
@@ -127,7 +124,7 @@ export default function LoginForm() {
         >
           <Input
             prefix={<IconUser />}
-            placeholder={t['login.form.userName.placeholder']}
+            placeholder={'输入智慧团建账号'}
             onPressEnter={onSubmitClick}
           />
         </Form.Item>
@@ -137,7 +134,7 @@ export default function LoginForm() {
         >
           <Input.Password
             prefix={<IconLock />}
-            placeholder={t['login.form.password.placeholder']}
+            placeholder={'输入智慧团建密码'}
             onPressEnter={onSubmitClick}
           />
         </Form.Item>
