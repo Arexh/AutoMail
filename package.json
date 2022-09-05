@@ -25,7 +25,8 @@
     "@loadable/component": "^5.13.2",
     "@turf/turf": "^6.5.0",
     "arco-design-pro": "^2.7.0",
-    "axios": "^0.24.0",
+    "axios": "^0.27.2",
+    "axios-cookiejar-support": "^4.0.3",
     "bizcharts": "^4.1.11",
     "classnames": "^2.3.1",
     "copy-to-clipboard": "^3.3.1",
@@ -50,6 +51,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "redux": "^4.1.2",
+    "tough-cookie": "^4.1.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

@@ -8,4 +8,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   send: function (eventName, ...args) {
     ipcRenderer.send(eventName, ...args);
   },
+  invoke: function (eventName, ...args) {
+    return ipcRenderer.invoke(eventName, ...args);
+  },
 });

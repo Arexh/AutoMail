@@ -1,14 +1,32 @@
 import { axiosClient } from '../utils/axiosClient';
+import isElectron from 'is-electron';
 
 const zhiHuiTuanJianApi: any = {};
+const urlMapping = {
+  '/api/zhihuituanjian': 'https://tuanapi.12355.net',
+  '/api/qingniandaxuexi': 'https://youthstudy.12355.net',
+};
 
 function service(params) {
-  return axiosClient({})(params);
+  if (!isElectron()) {
+    console.log('web axios!');
+    return axiosClient({})(params);
+  } else {
+    console.log('electon proxy request!');
+    for (const [key, value] of Object.entries(urlMapping)) {
+      if (params.url.includes(key)) {
+        params.url = params.url.replace(key, value);
+        break;
+      }
+    }
+    console.log(params.url);
+    return window.ipcRenderer.invoke('request', params);
+  }
 }
 
 zhiHuiTuanJianApi.login = (username, password) => {
   return service({
-    url: `https://tuanapi.12355.net/login/adminLogin`,
+    url: `/api/zhihuituanjian/login/adminLogin`,
     method: 'get',
     params: {
       userName: username,
@@ -19,7 +37,7 @@ zhiHuiTuanJianApi.login = (username, password) => {
 
 zhiHuiTuanJianApi.loginWithValid = (username, password, loginValidCode) => {
   return service({
-    url: `https://tuanapi.12355.net/login/adminLogin`,
+    url: `/api/zhihuituanjian/login/adminLogin`,
     method: 'get',
     params: {
       userName: username,
@@ -31,14 +49,14 @@ zhiHuiTuanJianApi.loginWithValid = (username, password, loginValidCode) => {
 
 zhiHuiTuanJianApi.logout = () => {
   return service({
-    url: `https://tuanapi.12355.net/login/exit`,
+    url: `/api/zhihuituanjian/login/exit`,
     method: 'get',
   });
 };
 
 zhiHuiTuanJianApi.getLoginValidCode = () => {
   return service({
-    url: `https://tuanapi.12355.net/login/loginValidCode`,
+    url: `/api/zhihuituanjian/login/loginValidCode`,
     method: 'get',
     responseType: 'blob',
   });
@@ -46,21 +64,21 @@ zhiHuiTuanJianApi.getLoginValidCode = () => {
 
 zhiHuiTuanJianApi.getAccountInfo = () => {
   return service({
-    url: `https://tuanapi.12355.net/login/getSessionAccount`,
+    url: `/api/zhihuituanjian/login/getSessionAccount`,
     method: 'get',
   });
 };
 
 zhiHuiTuanJianApi.getMenuList = () => {
   return service({
-    url: `https://tuanapi.12355.net/bg/role/limit`,
+    url: `/api/zhihuituanjian/bg/role/limit`,
     method: 'get',
   });
 };
 
 zhiHuiTuanJianApi.getDaXueXiUrl = () => {
   return service({
-    url: `https://tuanapi.12355.net/questionnaire/getPcYouthLearningUrl`,
+    url: `/api/zhihuituanjian/questionnaire/getPcYouthLearningUrl`,
     method: 'get',
   });
 };
@@ -68,7 +86,7 @@ zhiHuiTuanJianApi.getDaXueXiUrl = () => {
 zhiHuiTuanJianApi.getDaXueXiTable = (oid, date, chapterId, pageSize = 9999) => {
   console.log(chapterId);
   return service({
-    url: `https://youthstudy.12355.net/apibackend/admin/young/organize/userList`,
+    url: `/api/qingniandaxuexi/apibackend/admin/young/organize/userList`,
     method: 'get',
     params: {
       organizedId: oid,
@@ -86,7 +104,7 @@ zhiHuiTuanJianApi.getDaXueXiTable = (oid, date, chapterId, pageSize = 9999) => {
 
 zhiHuiTuanJianApi.getDaXueXiTable = (oid, params) => {
   return service({
-    url: `https://youthstudy.12355.net/apibackend/admin/young/organize/userList`,
+    url: `/api/qingniandaxuexi/apibackend/admin/young/organize/userList`,
     method: 'get',
     params: {
       organizedId: oid,
@@ -100,7 +118,7 @@ zhiHuiTuanJianApi.getDaXueXiTable = (oid, params) => {
 
 zhiHuiTuanJianApi.getDaXueXiChapter = () => {
   return service({
-    url: `https://youthstudy.12355.net/apibackend/admin/young/organize/chapter/date`,
+    url: `/api/qingniandaxuexi/apibackend/admin/young/organize/chapter/date`,
     method: 'get',
     headers: {
       'X-Litemall-IdentiFication': 'young', // important!

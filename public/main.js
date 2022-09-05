@@ -1,6 +1,10 @@
 // ./public/electron.js
 const path = require('path');
 const nodemailer = require('nodemailer');
+const axios = require('axios');
+const { wrapper } = require('axios-cookiejar-support');
+const { CookieJar } = require('tough-cookie');
+const { HttpsCookieAgent } = require('http-cookie-agent/http');
 
 const { app, BrowserWindow, ipcMain } = require('electron');
 const isDev = process.env.NODE_ENV !== 'development';
@@ -12,7 +16,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       preload: __dirname + '/preload.js',
-      webSecurity: false,
+      webSecurity: true,
     },
   });
 
@@ -36,6 +40,39 @@ ipcMain.on('test', (e, _) => {
     hello: 'hello',
     aaa: _,
   });
+});
+
+// axios setting
+const jar = new CookieJar();
+axios.defaults.withCredentials = true;
+axios.defaults.timeout = 3000;
+axios.defaults.httpsAgent = new HttpsCookieAgent({
+  cookies: { jar },
+});
+axios.defaults.headers.common = {
+  'User-Agent': 'PostmanRuntime/7.29.0',
+  Accept: '*/*',
+  'Accept-Encoding': 'gzip, deflate, br',
+  Connection: 'keep-alive',
+}; // request proxy
+console.log('init axios');
+const client = wrapper(axios.create({}));
+ipcMain.handle('request', async (_, axiosParams) => {
+  console.log('receive a request');
+  console.log(axiosParams);
+  const url = axiosParams.url;
+  const method = axiosParams.method;
+  delete axiosParams.url;
+  delete axiosParams.method;
+  const result =
+    method == 'get'
+      ? await client.get(url, axiosParams)
+      : await client.post(url, axiosParams);
+  console.log('request done');
+  return {
+    status: result.status,
+    data: result.data,
+  };
 });
 
 ipcMain.on('sendEmail', async (e, settings, contents) => {

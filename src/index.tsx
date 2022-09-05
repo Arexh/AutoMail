@@ -50,9 +50,11 @@ function Index() {
   }
 
   function fetchUserInfo() {
+    console.log('fetch user info');
     zhiHuiTuanJianApi
       .getAccountInfo()
       .then((res) => {
+        console.log('fetch user info get');
         console.log(res);
         if (res.data.status == 'ERROR') {
           Message.error(res.data.msg);
@@ -70,6 +72,8 @@ function Index() {
         }
       })
       .catch((res) => {
+        console.log('fetch user info error');
+        console.log(res);
         if (res.data.status == 'ERROR') {
           Message.error(res.data.msg);
           history.push('login');
