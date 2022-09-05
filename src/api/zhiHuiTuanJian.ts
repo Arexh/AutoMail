@@ -8,7 +8,7 @@ function service(params) {
 
 zhiHuiTuanJianApi.login = (username, password) => {
   return service({
-    url: `/api/zhihuituanjian/login/adminLogin`,
+    url: `https://tuanapi.12355.net/login/adminLogin`,
     method: 'get',
     params: {
       userName: username,
@@ -19,7 +19,7 @@ zhiHuiTuanJianApi.login = (username, password) => {
 
 zhiHuiTuanJianApi.loginWithValid = (username, password, loginValidCode) => {
   return service({
-    url: `/api/zhihuituanjian/login/adminLogin`,
+    url: `https://tuanapi.12355.net/login/adminLogin`,
     method: 'get',
     params: {
       userName: username,
@@ -31,14 +31,14 @@ zhiHuiTuanJianApi.loginWithValid = (username, password, loginValidCode) => {
 
 zhiHuiTuanJianApi.logout = () => {
   return service({
-    url: `/api/zhihuituanjian/login/exit`,
+    url: `https://tuanapi.12355.net/login/exit`,
     method: 'get',
   });
 };
 
 zhiHuiTuanJianApi.getLoginValidCode = () => {
   return service({
-    url: `/api/zhihuituanjian/login/loginValidCode`,
+    url: `https://tuanapi.12355.net/login/loginValidCode`,
     method: 'get',
     responseType: 'blob',
   });
@@ -46,21 +46,21 @@ zhiHuiTuanJianApi.getLoginValidCode = () => {
 
 zhiHuiTuanJianApi.getAccountInfo = () => {
   return service({
-    url: `/api/zhihuituanjian/login/getSessionAccount`,
+    url: `https://tuanapi.12355.net/login/getSessionAccount`,
     method: 'get',
   });
 };
 
 zhiHuiTuanJianApi.getMenuList = () => {
   return service({
-    url: `/api/zhihuituanjian/bg/role/limit`,
+    url: `https://tuanapi.12355.net/bg/role/limit`,
     method: 'get',
   });
 };
 
 zhiHuiTuanJianApi.getDaXueXiUrl = () => {
   return service({
-    url: `/api/zhihuituanjian/questionnaire/getPcYouthLearningUrl`,
+    url: `https://tuanapi.12355.net/questionnaire/getPcYouthLearningUrl`,
     method: 'get',
   });
 };
@@ -68,7 +68,7 @@ zhiHuiTuanJianApi.getDaXueXiUrl = () => {
 zhiHuiTuanJianApi.getDaXueXiTable = (oid, date, chapterId, pageSize = 9999) => {
   console.log(chapterId);
   return service({
-    url: `/api/qingniandaxuexi/apibackend/admin/young/organize/userList`,
+    url: `https://youthstudy.12355.net/apibackend/admin/young/organize/userList`,
     method: 'get',
     params: {
       organizedId: oid,
@@ -86,7 +86,7 @@ zhiHuiTuanJianApi.getDaXueXiTable = (oid, date, chapterId, pageSize = 9999) => {
 
 zhiHuiTuanJianApi.getDaXueXiTable = (oid, params) => {
   return service({
-    url: `/api/qingniandaxuexi/apibackend/admin/young/organize/userList`,
+    url: `https://youthstudy.12355.net/apibackend/admin/young/organize/userList`,
     method: 'get',
     params: {
       organizedId: oid,
@@ -100,7 +100,7 @@ zhiHuiTuanJianApi.getDaXueXiTable = (oid, params) => {
 
 zhiHuiTuanJianApi.getDaXueXiChapter = () => {
   return service({
-    url: `/api/qingniandaxuexi/apibackend/admin/young/organize/chapter/date`,
+    url: `https://youthstudy.12355.net/apibackend/admin/young/organize/chapter/date`,
     method: 'get',
     headers: {
       'X-Litemall-IdentiFication': 'young', // important!

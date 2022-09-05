@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { ConfigProvider, Message } from '@arco-design/web-react';
 import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 import enUS from '@arco-design/web-react/es/locale/en-US';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { HashRouter, Switch, Route } from 'react-router-dom';
 import rootReducer from './store';
 import PageLayout from './layout';
 import { GlobalContext } from './context';
@@ -18,6 +18,7 @@ import zhiHuiTuanJianApi from './api/zhiHuiTuanJian';
 import { GlobalState } from './store';
 import { generate, getRgbStr } from '@arco-design/color';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 // import './mock';
 
 const store = createStore(rootReducer);
@@ -35,6 +36,7 @@ function Index() {
     const rgbStr = getRgbStr(l);
     document.body.style.setProperty(`--arcoblue-${index + 1}`, rgbStr);
   });
+  const history = useHistory();
 
   function getArcoLocale() {
     switch (lang) {
@@ -48,23 +50,32 @@ function Index() {
   }
 
   function fetchUserInfo() {
-    zhiHuiTuanJianApi.getAccountInfo().then((res) => {
-      console.log(res);
-      if (res.data.status == 'ERROR') {
-        Message.error(res.data.msg);
-        window.location.href = '/login';
-        setUserStatus('logout');
-      }
-      const data = res.data.account;
-      store.dispatch({
-        type: 'update-userInfo',
-        payload: {
-          userInfo: res.data.account,
-          userLoading: false,
-        },
+    zhiHuiTuanJianApi
+      .getAccountInfo()
+      .then((res) => {
+        console.log(res);
+        if (res.data.status == 'ERROR') {
+          Message.error(res.data.msg);
+          history.push('login');
+          setUserStatus('logout');
+        } else {
+          const data = res.data.account;
+          store.dispatch({
+            type: 'update-userInfo',
+            payload: {
+              userInfo: res.data.account,
+              userLoading: false,
+            },
+          });
+        }
+      })
+      .catch((res) => {
+        if (res.data.status == 'ERROR') {
+          Message.error(res.data.msg);
+          history.push('login');
+          setUserStatus('logout');
+        }
       });
-      console.log(res.data);
-    });
   }
 
   useEffect(() => {
@@ -77,7 +88,7 @@ function Index() {
     } else if (window.location.pathname.replace(/\//g, '') !== 'login') {
       Message.error('您的登录已失效，请重新登录');
       setTimeout(() => {
-        window.location.pathname = '/login';
+        history.push('login');
       }, 2000);
     }
   }, []);
@@ -94,32 +105,35 @@ function Index() {
   };
 
   return (
-    <BrowserRouter>
-      <ConfigProvider
-        locale={getArcoLocale()}
-        componentConfig={{
-          Card: {
-            bordered: false,
-          },
-          List: {
-            bordered: false,
-          },
-          Table: {
-            border: false,
-          },
-        }}
-      >
-        <Provider store={store}>
-          <GlobalContext.Provider value={contextValue}>
-            <Switch>
-              <Route path="/login" component={Login} />
-              <Route path="/" component={PageLayout} />
-            </Switch>
-          </GlobalContext.Provider>
-        </Provider>
-      </ConfigProvider>
-    </BrowserRouter>
+    <ConfigProvider
+      locale={getArcoLocale()}
+      componentConfig={{
+        Card: {
+          bordered: false,
+        },
+        List: {
+          bordered: false,
+        },
+        Table: {
+          border: false,
+        },
+      }}
+    >
+      <Provider store={store}>
+        <GlobalContext.Provider value={contextValue}>
+          <Switch>
+            <Route path="/login" component={Login} />
+            <Route path="/" component={PageLayout} />
+          </Switch>
+        </GlobalContext.Provider>
+      </Provider>
+    </ConfigProvider>
   );
 }
 
-ReactDOM.render(<Index />, document.getElementById('root'));
+ReactDOM.render(
+  <HashRouter>
+    <Index />
+  </HashRouter>,
+  document.getElementById('root')
+);

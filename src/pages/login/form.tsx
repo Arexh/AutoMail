@@ -14,6 +14,7 @@ import useLocale from '@/utils/useLocale';
 import locale from './locale';
 import styles from './style/index.module.less';
 import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
+import { useHistory } from 'react-router-dom';
 
 export default function LoginForm() {
   const formRef = useRef<FormInstance>();
@@ -22,6 +23,7 @@ export default function LoginForm() {
   const [loginParams, setLoginParams, removeLoginParams] =
     useStorage('loginParams');
   const [loginValidCodeImg, setLoginValidCodeImg] = useState(null);
+  const history = useHistory();
 
   const t = useLocale(locale);
 
@@ -49,7 +51,7 @@ export default function LoginForm() {
     // 记录登录状态
     localStorage.setItem('userStatus', 'login');
     // 跳转首页
-    window.location.href = '/';
+    history.push('/');
   }
 
   function login(params) {

@@ -2,6 +2,8 @@
   "name": "arco-design-pro",
   "version": "1.0.0",
   "description": "Arco Design Pro",
+  "main": "public/main.js",
+  "homepage": "./",
   "scripts": {
     "start": "react-app-rewired start",
     "dev": "react-app-rewired start",
@@ -10,7 +12,10 @@
     "eslint": "eslint src/ --ext .ts,.tsx,.js,.jsx --fix --cache",
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --fix --cache",
     "pre-commit": "pretty-quick --staged && npm run eslint && npm run stylelint",
-    "prepare": "husky install && husky add .husky/pre-commit 'npm run pre-commit'"
+    "prepare": "husky install && husky add .husky/pre-commit 'npm run pre-commit'",
+    "electron": "NODE_ENV=development electron .",
+    "mail-dev": "NODE_ENV=development node ./public/emailServer.js",
+    "webpack": "webpack --progress"
   },
   "dependencies": {
     "@antv/data-set": "^0.11.8",
@@ -26,11 +31,13 @@
     "copy-to-clipboard": "^3.3.1",
     "dexie": "^3.2.2",
     "dexie-react-hooks": "^1.1.1",
+    "electron-reload": "^2.0.0-alpha.1",
     "fuse.js": "^6.6.2",
     "http-proxy-middleware": "^2.0.6",
     "is-electron": "^2.2.1",
     "lodash": "^4.17.21",
     "mockjs": "^1.1.0",
+    "nodemailer": "^6.7.8",
     "nprogress": "^0.2.0",
     "query-string": "^6.13.8",
     "quill": "^1.3.7",
@@ -54,6 +61,8 @@
     "@typescript-eslint/parser": "^5.4.0",
     "customize-cra": "^1.0.0",
     "customize-cra-less-loader": "^2.0.0",
+    "electron": "^20.1.1",
+    "electron-builder": "^23.3.3",
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-babel": "^5.3.1",
@@ -71,7 +80,8 @@
     "stylelint": "^14.1.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^24.0.0",
-    "typescript": "^4.5.2"
+    "typescript": "^4.5.2",
+    "webpack-cli": "^4.10.0"
   },
   "browserslist": {
     "production": [
@@ -83,6 +93,32 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "build": {
+    "productName": "automail",
+    "appId": "SUSTech-ShuDe",
+    "directories": {
+      "output": "builder"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "nsis": {
+      "shortcutName": "makalo-cnblog-tool",
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "files": [
+      "build/**/*",
+      "main.js"
     ]
   }
 }
