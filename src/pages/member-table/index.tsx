@@ -176,9 +176,9 @@ function SearchTable() {
     } else {
       exportData = members.map((i) => {
         return {
-          Name: i.name,
-          Email: i.email,
-          PoliticalStatus: i.politicalStatus,
+          姓名: i.name,
+          邮箱: i.email,
+          政治面貌: i.politicalStatus,
         };
       });
     }

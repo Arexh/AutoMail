@@ -6,6 +6,7 @@ import {
   Typography,
   Tag,
   Popover,
+  Message,
 } from '@arco-design/web-react';
 import useLocale from '@/utils/useLocale';
 import SearchForm from './form';
@@ -14,6 +15,7 @@ import isElectron from 'is-electron';
 import { zhiHuiTuanJianDb } from '@/db/zhiHuiTuanJianDb';
 import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
 import { useSelector } from 'react-redux';
+import * as XLSX from 'xlsx';
 
 const { Title } = Typography;
 const columns = [
@@ -292,6 +294,52 @@ function SearchTable() {
     //   });
   }
 
+  function exportData(exportedData, exportTableFileName, widths) {
+    const worksheet = XLSX.utils.json_to_sheet(exportedData);
+    const workbook = XLSX.utils.book_new();
+    worksheet['!cols'] = widths.map((item) => {
+      return { width: item };
+    });
+    console.log(worksheet['!cols']);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Member');
+    XLSX.writeFile(workbook, exportTableFileName);
+  }
+
+  function handleExportUnlearnedList() {
+    exportData(
+      data
+        .filter((item) => item.fullName == undefined)
+        .map((item) => {
+          return {
+            姓名: item.name,
+            大学习期数: dataName,
+            是否学习: '否',
+            邮箱: item.email,
+          };
+        }),
+      `${dataName}-未学习名单.xlsx`,
+      [10, 30, 10, 30]
+    );
+    Message.success(`导出《${dataName}》未学习名单成功！`);
+  }
+
+  function handleExportCompleteList() {
+    exportData(
+      data.map((item) => {
+        return {
+          姓名: item.name,
+          大学习期数: dataName,
+          部门: item.fullName,
+          是否学习: item.fullName == undefined ? '否' : '是',
+          邮箱: item.email,
+        };
+      }),
+      `${dataName}-完整名单.xlsx`,
+      [10, 30, 57, 10, 30]
+    );
+    Message.success(`导出《${dataName}》完整名单成功！`);
+  }
+
   function getUnCompleteCount() {
     return data.filter((item) => !item.ifComplete).length;
   }
@@ -309,6 +357,8 @@ function SearchTable() {
         getUnCompleteCount={getUnCompleteCount}
         onSendEmail={handleSendEmail}
         onSearch={handleSearch}
+        handleExportUnlearnedList={handleExportUnlearnedList}
+        handleExportCompleteList={handleExportCompleteList}
       />
       <Table
         rowKey="id"
