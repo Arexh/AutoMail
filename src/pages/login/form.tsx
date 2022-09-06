@@ -52,6 +52,7 @@ export default function LoginForm() {
     localStorage.setItem('userStatus', 'login');
     // 跳转首页
     history.push('/');
+    window.location.reload();
   }
 
   function login(params) {
