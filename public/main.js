@@ -75,13 +75,17 @@ ipcMain.handle('request', async (_, axiosParams) => {
   };
 });
 
-ipcMain.on('sendEmail', async (e, settings, contents) => {
+// mail server
+ipcMain.handle('sendEmail', async (e, settings, contents) => {
+  console.log('sendEmail');
+  console.log(settings);
+  console.log(contents);
   // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport(settings);
+  const transporter = nodemailer.createTransport(settings);
   // send mail with defined transport object
-  transporter.sendMail(contents, (error, info) =>
-    e.sender.send('sendEmail-reply', info)
-  );
+  const response = await transporter.sendMail(contents);
+  console.log(response);
+  return response;
 });
 
 const isDevelopment = !app.isPackaged;

@@ -12,6 +12,7 @@ import {
 } from '@arco-design/web-react';
 import Editor from '@/components/Editor';
 import { zhiHuiTuanJianDb } from '@/db/zhiHuiTuanJianDb';
+import isElectron from 'is-electron';
 
 const { Title } = Typography;
 const { Row } = Grid;
@@ -32,56 +33,72 @@ function Example() {
         };
       });
       settings.forEach((item) => emailSettingForm.setFieldsValue(item));
+      const settingDict = emailSettingForm.getFieldsValue();
+      if (
+        !settingDict.eA ||
+        !settingDict.eP ||
+        !settingDict.eS ||
+        !settingDict.p
+      ) {
+        setTestSendDisabled(true);
+      } else {
+        setTestSendDisabled(false);
+      }
     });
 
   const handleSaveEmailSettings = () => {
     const settingDict = emailSettingForm.getFieldsValue();
+    console.log(settingDict);
     if (
-      settingDict.eA == undefined ||
-      settingDict.eP == undefined ||
-      settingDict.eS == undefined ||
-      settingDict.p == undefined
+      !settingDict.eA ||
+      !settingDict.eP ||
+      !settingDict.eS ||
+      !settingDict.p
     ) {
       setTestSendDisabled(true);
+      Message.error('邮箱设置不能为空!');
     } else {
-      const batchData = Object.keys(settingDict).map((i) => {
-        return { settingName: i, value: settingDict[i] };
-      });
-      batchData.forEach((item) => zhiHuiTuanJianDb.table('settings').put(item));
       setTestSendDisabled(false);
-      Message.success('邮件设置保存成功！');
+      Message.success('邮件设置保存成功！请点击"发送测试邮件"按钮测试!');
     }
+    const batchData = Object.keys(settingDict).map((i) => {
+      return { settingName: i, value: settingDict[i] };
+    });
+    batchData.forEach((item) => zhiHuiTuanJianDb.table('settings').put(item));
   };
   const handleSendTestMail = () => {
-    alert('请在Electron里面执行');
-    // if (isElectron()) {
-    //   const emailSettings = emailSettingForm.getFieldsValue();
-    //   window.ipcRenderer.on('sendEmail-reply', (event, arg) => {
-    //     console.log(event);
-    //     console.log(arg);
-    //   });
-    //   window.ipcRenderer.send(
-    //     'sendEmail',
-    //     {
-    //       host: emailSettings.emailServer,
-    //       port: emailSettings.emailServerPort,
-    //       secure: true,
-    //       auth: {
-    //         user: emailSettings.emailAccount,
-    //         pass: emailSettings.emailPassword,
-    //       },
-    //     },
-    //     {
-    //       from: `"测试发件人姓名" <${emailSettings.emailAccount}>`, // sender address
-    //       to: emailSettings.emailAccount,
-    //       subject: '测试邮件标题',
-    //       text: '文本内容',
-    //       html: '<h1>Html内容</h1>',
-    //     }
-    //   );
-    // } else {
-    //   alert('请在Electron里面执行');
-    // }
+    if (isElectron()) {
+      const emailSettings = emailSettingForm.getFieldsValue();
+      window.ipcRenderer
+        .invoke(
+          'sendEmail',
+          {
+            host: emailSettings.eS,
+            port: emailSettings.p,
+            secure: true,
+            auth: {
+              user: emailSettings.eA,
+              pass: emailSettings.eP,
+            },
+          },
+          {
+            from: `"测试发件人姓名" <${emailSettings.eA}>`, // sender address
+            to: emailSettings.eA,
+            subject: '测试邮件标题',
+            text: '文本内容',
+            html: '<h1>Html内容</h1>',
+          }
+        )
+        .then((res) => {
+          Message.success('测试邮件发送成功!');
+        })
+        .catch((error) => {
+          Message.error(String(error));
+          Message.error('邮箱设置有误, 请检查!');
+        });
+    } else {
+      Message.error('请在Electron里面执行');
+    }
   };
 
   return (
@@ -172,7 +189,7 @@ function Example() {
                   style={{ marginRight: 10 }}
                   onClick={handleSaveEmailSettings}
                 >
-                  应用
+                  保存
                 </Button>
                 <Button
                   onClick={handleSendTestMail}
