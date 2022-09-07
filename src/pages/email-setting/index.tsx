@@ -203,7 +203,7 @@ function Example() {
                         </span>
                       }
                     >
-                      <span>
+                      <span className="hover-text">
                         批量大小
                         <IconQuestionCircle
                           style={{ verticalAlign: 'super', fontSize: 11 }}
