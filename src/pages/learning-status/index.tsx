@@ -7,6 +7,7 @@ import {
   Tag,
   Popover,
   Message,
+  Notification,
 } from '@arco-design/web-react';
 import useLocale from '@/utils/useLocale';
 import SearchForm from './form';
@@ -17,6 +18,7 @@ import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
 import { useSelector } from 'react-redux';
 import * as XLSX from 'xlsx';
 
+const MAIL_BTN_TEXT = '第五步: 向未学习同学发送邮件';
 const { Title } = Typography;
 const columns = [
   {
@@ -121,6 +123,8 @@ function SearchTable() {
     pageSizeChangeResetCurrent: true,
   });
   const [loading, setLoading] = useState(true);
+  const [mailBtnLoading, setMailBtnLoading] = useState(false);
+  const [mailBtnText, setMailBtnText] = useState(MAIL_BTN_TEXT);
   const [formParams, setFormParams] = useState({});
   const [dataName, setDataName] = useState('');
   const userInfo = useSelector((state: any) => state.userInfo || {});
@@ -220,7 +224,7 @@ function SearchTable() {
     fetchData();
   }
 
-  function handleSendEmail() {
+  async function handleSendEmail() {
     if (!isElectron()) {
       alert('请在Electron里面执行');
       return;
@@ -233,65 +237,89 @@ function SearchTable() {
           address: item.email,
         };
       });
-    // zhiHuiTuanJianDb
-    //   .table('settings')
-    //   .toArray()
-    //   .then((array) => {
-    //     const emailSettings = {};
-    //     array.forEach((item) => {
-    //       emailSettings[item['settingName']] = item['value'];
-    //     });
-    //     window.ipcRenderer.on('sendEmail-reply', (event, arg) => {
-    //       if (arg.accepted.length != 0) {
-    //         console.log(arg);
-    //         Notification.success({
-    //           closable: true,
-    //           title: '发送成功',
-    //           content: `${arg.accepted.length}封邮件发送成功`,
-    //         });
-    //       }
-    //       if (arg.rejected.length != 0) {
-    //         Notification.error({
-    //           closable: true,
-    //           title: '发送失败',
-    //           content: `${arg.rejected.length}封邮件发送失败`,
-    //         });
-    //       }
-    //     });
-    //     zhiHuiTuanJianDb
-    //       .table('settings')
-    //       .where('settingName')
-    //       .equalsIgnoreCase('template')
-    //       .toArray()
-    //       .then((array) => {
-    //         if (array.length != 0) {
-    //           window.ipcRenderer.send(
-    //             'sendEmail',
-    //             {
-    //               host: emailSettings['emailServer'],
-    //               port: emailSettings['emailServerPort'],
-    //               secure: true,
-    //               auth: {
-    //                 user: emailSettings['emailAccount'],
-    //                 pass: emailSettings['emailPassword'],
-    //               },
-    //             },
-    //             {
-    //               from: {
-    //                 name: "树德书院",
-    //                 address: emailSettings['emailAccount']
-    //               },
-    //               to: emailsToSend,
-    //               subject: dataName + '未学习提醒邮件',
-    //               text: '青年大学习提醒',
-    //               html: array[0].value,
-    //             }
-    //           );
-    //         } else {
-    //           Message.error('请先设置邮件模板');
-    //         }
-    //       });
-    //   });
+    setMailBtnLoading(true);
+    const settingArray = await zhiHuiTuanJianDb.table('settings').toArray();
+    const emailSettings = {};
+    settingArray.forEach((item) => {
+      emailSettings[item['settingName']] = item['value'];
+    });
+    const mailParams = {
+      host: emailSettings['eS'],
+      port: emailSettings['p'],
+      secure: true,
+      auth: {
+        user: emailSettings['eA'],
+        pass: emailSettings['eP'],
+      },
+    };
+    const mailTemplate = emailSettings['template'];
+    const mailBatchSize = emailSettings['batchSize'];
+    const mailContent = {
+      from: {
+        name: '测试',
+        address: emailSettings['eA'],
+      },
+      subject: dataName + '-未学习提醒邮件',
+      text: '青年大学习提醒',
+      html: mailTemplate,
+    };
+    const tasks = [];
+    for (let i = 0; i < emailsToSend.length; i += mailBatchSize) {
+      const batchEmails = emailsToSend.slice(
+        i,
+        Math.min(i + mailBatchSize, emailsToSend.length)
+      );
+      const batchMailContent = { ...mailContent };
+      batchMailContent['to'] = batchEmails;
+      tasks.push(
+        window.ipcRenderer.invoke('sendEmail', mailParams, batchMailContent)
+      );
+    }
+    // run series task
+    const expectedCount =
+      mailBatchSize < emailsToSend.length
+        ? Math.ceil(emailsToSend.length / mailBatchSize)
+        : 1;
+    setMailBtnText(`正在发送邮件, 共 ${expectedCount} 个批次...`);
+    const result = await Promise.all(tasks);
+    setMailBtnLoading(false);
+    setMailBtnText(MAIL_BTN_TEXT);
+
+    let successMails = [];
+    let failMails = [];
+    let rejectedReasons = [];
+    let count = 0;
+    result.forEach((item) => {
+      console.log(item);
+      console.log(item['accepted']);
+      if (item.accepted) {
+        successMails = successMails.concat(item.accepted);
+      }
+      if (item.rejected) {
+        failMails = failMails.concat(item.rejected);
+        rejectedReasons = rejectedReasons.concat(item.rejectedErrors);
+      }
+      if (!item.accepted && !item.rejected) {
+        const leftBound = count * mailBatchSize;
+        const batchFailedMails = emailsToSend.slice(
+          leftBound,
+          Math.min(emailsToSend.length, leftBound + mailBatchSize)
+        );
+        failMails = failMails.concat(
+          batchFailedMails.map((item) => item.address)
+        );
+        batchFailedMails.forEach((_) => rejectedReasons.push(item));
+      }
+      count++;
+    });
+    console.log(successMails);
+    console.log(failMails);
+    console.log(rejectedReasons);
+    Notification.info({
+      closable: true,
+      title: '邮件发送情况汇总',
+      content: `共 ${emailsToSend.length} 个收件人, ${successMails.length} 个邮箱发送成功, ${failMails.length} 个邮箱发送失败.`,
+    });
   }
 
   function exportData(exportedData, exportTableFileName, widths) {
@@ -352,6 +380,8 @@ function SearchTable() {
     <Card>
       <Title heading={6}>{t['menu.list.searchTable']}</Title>
       <SearchForm
+        mailBtnLoading={mailBtnLoading}
+        mailBtnText={mailBtnText}
         getDataName={getDataName}
         setDataName={setDataName}
         getUnCompleteCount={getUnCompleteCount}

@@ -19,6 +19,8 @@ const { Row, Col } = Grid;
 const { useForm } = Form;
 
 function SearchForm(props: {
+  mailBtnLoading: boolean;
+  mailBtnText: string;
   onSearch: (values: Record<string, any>) => void;
   onSendEmail: () => void;
   getUnCompleteCount: () => any;
@@ -174,11 +176,12 @@ function SearchForm(props: {
         >
           {showMailBtn && (
             <Button
+              loading={props.mailBtnLoading}
               style={{ marginRight: 40 }}
               type="primary"
               icon={<IconEmail />}
             >
-              第五步: 向未学习同学发送邮件
+              {props.mailBtnText}
             </Button>
           )}
         </Popconfirm>

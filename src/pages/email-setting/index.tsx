@@ -52,6 +52,9 @@ function Example() {
   const handleSaveEmailSettings = () => {
     const settingDict = emailSettingForm.getFieldsValue();
     console.log(settingDict);
+    if (!settingDict.batchSize) {
+      settingDict.batchSize = 50;
+    }
     if (
       !settingDict.eA ||
       !settingDict.eP ||

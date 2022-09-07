@@ -83,9 +83,16 @@ ipcMain.handle('sendEmail', async (e, settings, contents) => {
   // create reusable transporter object using the default SMTP transport
   const transporter = nodemailer.createTransport(settings);
   // send mail with defined transport object
-  const response = await transporter.sendMail(contents);
-  console.log(response);
-  return response;
+  try {
+    const response = await transporter.sendMail(contents);
+    console.log('NORMAL');
+    console.log(response);
+    return response;
+  } catch (err) {
+    console.log('ERROR');
+    console.log(err);
+    return err;
+  }
 });
 
 const isDevelopment = !app.isPackaged;
