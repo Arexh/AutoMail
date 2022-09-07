@@ -9,10 +9,13 @@ import {
   Space,
   InputNumber,
   Message,
+  Slider,
+  Popover,
 } from '@arco-design/web-react';
 import Editor from '@/components/Editor';
 import { zhiHuiTuanJianDb } from '@/db/zhiHuiTuanJianDb';
 import isElectron from 'is-electron';
+import { IconQuestionCircle } from '@arco-design/web-react/icon';
 
 const { Title } = Typography;
 const { Row } = Grid;
@@ -104,10 +107,10 @@ function Example() {
   return (
     <>
       <Row>
-        <Card style={{ width: 400 }}>
+        <Card style={{ width: 440 }}>
           <Title heading={6}>第一步：发件邮箱设置（必填）</Title>
           填写发件邮箱账号、密码以及对应服务器和端口：
-          <Row style={{ marginTop: 16 }}>
+          <Row style={{ marginTop: 20 }}>
             <Form autoComplete="off" form={emailSettingForm}>
               <input
                 type="text"
@@ -182,6 +185,48 @@ function Example() {
                 >
                   <InputNumber placeholder="请输入邮箱服务器端口号..." />
                 </FormItem>
+                <FormItem
+                  label={
+                    <Popover
+                      title="批量大小"
+                      content={
+                        <span>
+                          <p style={{ margin: 0 }}>
+                            当群发邮件数量过多时, 邮件将分组发送,
+                            每组包含的邮件数量即批量大小.
+                          </p>
+                          <p style={{ margin: 0 }}>
+                            <b>例如</b>: 设置的批量大小为50,
+                            当前要群发的邮件有70封,
+                            那么邮件将拆分成50+20两组分别发送.
+                          </p>
+                        </span>
+                      }
+                    >
+                      <span>
+                        批量大小
+                        <IconQuestionCircle
+                          style={{ verticalAlign: 'super', fontSize: 11 }}
+                        />
+                      </span>
+                    </Popover>
+                  }
+                  field="batchSize"
+                >
+                  <Slider
+                    style={{ width: 250, marginTop: 10 }}
+                    defaultValue={50}
+                    min={1}
+                    max={100}
+                    marks={{
+                      0: '0',
+                      25: '25',
+                      50: '50',
+                      75: '75',
+                      100: '100',
+                    }}
+                  />
+                </FormItem>
               </Space>
               <Row justify="end">
                 <Button
@@ -205,7 +250,7 @@ function Example() {
         <Card
           style={{
             marginLeft: 40,
-            width: 'calc(100% - 440px)',
+            width: 'calc(100% - 480px)',
             minWidth: 400,
             height: '100%',
           }}
