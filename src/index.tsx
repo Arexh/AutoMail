@@ -90,7 +90,9 @@ function Index() {
     if (checkLogin()) {
       fetchUserInfo();
     } else if (window.location.pathname.replace(/\//g, '') !== 'login') {
-      Message.error('您的登录已失效，请重新登录');
+      if (!history.location.pathname.includes('login')) {
+        Message.error('您的登录已失效，请重新登录');
+      }
       setTimeout(() => {
         history.push('login');
       }, 2000);
