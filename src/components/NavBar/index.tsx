@@ -38,13 +38,14 @@ import useStorage from '@/utils/useStorage';
 import { generatePermission } from '@/routes';
 import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
 import { useHistory } from 'react-router-dom';
+import SUSTechLogo from '@/assets/SUSTech-logo.svg';
 
 function Navbar({ show }: { show: boolean }) {
   const t = useLocale();
   const userInfo = useSelector((state: GlobalState) => state.userInfo);
   const dispatch = useDispatch();
 
-  const [_, setUserStatus] = useStorage('userStatus');
+  const [userStatus, setUserStatus] = useStorage('userStatus');
   const [role, setRole] = useStorage('userRole', 'admin');
 
   const { setLang, lang, theme, setTheme } = useContext(GlobalContext);
@@ -147,8 +148,8 @@ function Navbar({ show }: { show: boolean }) {
     <div className={styles.navbar}>
       <div className={styles.left}>
         <div className={styles.logo}>
-          <Logo />
-          <div className={styles['logo-name']}>Arco Pro</div>
+          <SUSTechLogo />
+          <div className={styles['logo-name']}>AutoMail</div>
         </div>
       </div>
       <ul className={styles.right}>
@@ -205,9 +206,11 @@ function Navbar({ show }: { show: boolean }) {
           </Tooltip>
         </li>
         <li>
-          <Button onClick={logout} status="danger">
-            登出
-          </Button>
+          {userStatus !== 'logout' && (
+            <Button onClick={logout} status="danger">
+              登出
+            </Button>
+          )}
         </li>
         {/* {userInfo && (
           <li>

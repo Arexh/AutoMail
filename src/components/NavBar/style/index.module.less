@@ -5,6 +5,7 @@
   box-sizing: border-box;
   background-color: var(--color-bg-2);
   height: 100%;
+  overflow: hidden;
 }
 
 .left {
@@ -15,16 +16,24 @@
 .logo {
   display: flex;
   align-items: center;
-  width: 200px;
-  padding-left: 20px;
+  width: 300px;
+  height: 100%;
+  padding-left: 0px;
+  padding-top: 5px;
   box-sizing: border-box;
 }
 
+.logo svg {
+  width: 250px;
+  margin-left: -10px;
+  overflow: hidden;
+}
+
 .logo-name {
-  color: var(--color-text-1);
+  color: rgb(var(--primary-8));
   font-weight: 500;
   font-size: 20px;
-  margin-left: 10px;
+  margin-left: -15px;
   font-family: 'PingFang SC';
 }
 

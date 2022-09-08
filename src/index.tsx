@@ -19,6 +19,8 @@ import { GlobalState } from './store';
 import { generate, getRgbStr } from '@arco-design/color';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import Navbar from './components/NavBar';
+import styles from './style/layout.module.less';
 // import './mock';
 
 const store = createStore(rootReducer);
@@ -127,6 +129,9 @@ function Index() {
     >
       <Provider store={store}>
         <GlobalContext.Provider value={contextValue}>
+          <div className={styles['layout-navbar']}>
+            <Navbar show={true} />
+          </div>
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/" component={PageLayout} />

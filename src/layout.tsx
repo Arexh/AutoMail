@@ -10,12 +10,12 @@ import {
   IconMenuFold,
   IconMenuUnfold,
   IconSelectAll,
+  IconSettings,
   IconUserGroup,
 } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
 import qs from 'query-string';
 import NProgress from 'nprogress';
-import Navbar from './components/NavBar';
 import Footer from './components/Footer';
 import useRoute, { IRoute } from '@/routes';
 import useLocale from './utils/useLocale';
@@ -35,7 +35,7 @@ function getIconFromKey(key) {
     case 'dashboard':
       return <IconDashboard className={styles.icon} />;
     case 'email-setting':
-      return <IconEmail className={styles.icon} />;
+      return <IconSettings className={styles.icon} />;
     case 'member-table':
       return <IconUserGroup className={styles.icon} />;
     case 'learning-status':
@@ -200,13 +200,6 @@ function PageLayout() {
   }, [pathname]);
   return (
     <Layout className={styles.layout}>
-      <div
-        className={cs(styles['layout-navbar'], {
-          [styles['layout-navbar-hidden']]: !showNavbar,
-        })}
-      >
-        <Navbar show={showNavbar} />
-      </div>
       {userLoading ? (
         <Spin className={styles['spin']} />
       ) : (

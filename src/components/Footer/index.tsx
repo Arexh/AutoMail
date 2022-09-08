@@ -7,9 +7,18 @@ import styles from './style/index.module.less';
 function Footer(props: FooterProps = {}) {
   const { className, ...restProps } = props;
   return (
-    <Layout.Footer className={cs(styles.footer, className)} {...restProps}>
-      Arco Design Pro
-    </Layout.Footer>
+    <>
+      <Layout.Footer className={cs(styles.footer, className)} {...restProps}>
+        Repo: github.com/Arexh/AutoMail
+      </Layout.Footer>
+      <Layout.Footer
+        style={{ marginTop: -16 }}
+        className={cs(styles.footer, className)}
+        {...restProps}
+      >
+        Arco Design Pro
+      </Layout.Footer>
+    </>
   );
 }
 
