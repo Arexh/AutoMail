@@ -83,7 +83,7 @@ function Overview() {
     <Card>
       <Typography.Title heading={5}>
         {t['workplace.welcomeBack']}
-        {userInfo.name}
+        {userInfo.username}
       </Typography.Title>
       <Divider />
       <Row>

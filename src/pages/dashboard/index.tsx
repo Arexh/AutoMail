@@ -15,27 +15,7 @@ const { Row, Col } = Grid;
 const gutter = 16;
 
 function Workplace() {
-  return (
-    <Space size={16} align="start">
-      <Space size={16} direction="vertical">
-        <Overview />
-        <Row gutter={gutter}>
-          <Col span={12}>
-            <PopularContents />
-          </Col>
-          <Col span={12}>
-            <ContentPercentage />
-          </Col>
-        </Row>
-      </Space>
-      <Space className={styles.right} size={16} direction="vertical">
-        <Shortcuts />
-        <Carousel />
-        <Announcement />
-        <Docs />
-      </Space>
-    </Space>
-  );
+  return <Overview />;
 }
 
 export default Workplace;

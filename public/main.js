@@ -7,7 +7,7 @@ const { CookieJar } = require('tough-cookie');
 const { HttpsCookieAgent } = require('http-cookie-agent/http');
 
 const { app, BrowserWindow, ipcMain } = require('electron');
-const isDev = process.env.NODE_ENV !== 'development';
+const isDev = process.env.NODE_ENV == 'development';
 
 // https://github.com/blazer233/Today-wallpapers/blob/master/public/electron.js
 function createWindow() {
@@ -18,6 +18,8 @@ function createWindow() {
       preload: __dirname + '/preload.js',
       webSecurity: true,
     },
+    menu: null,
+    titleBarStyle: 'hiddenInset',
   });
 
   mainWindow.maximize();
@@ -25,14 +27,16 @@ function createWindow() {
   // win.loadFile("index.html");
   // mainWindow.loadURL(`file://${__dirname}\\index.html`);
   isDev
-    ? mainWindow.loadURL(
+    ? mainWindow.loadURL(`http://localhost:3000`)
+    : mainWindow.loadURL(
         `file://${path.join(__dirname, '../build/index.html')}`
-      )
-    : mainWindow.loadURL(`http://localhost:3000`);
+      );
   // Open the DevTools.
-  mainWindow.webContents.openDevTools({
-    mode: 'right',
-  });
+  if (isDev) {
+    mainWindow.webContents.openDevTools({
+      mode: 'right',
+    });
+  }
 }
 
 ipcMain.on('test', (e, _) => {

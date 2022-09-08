@@ -17,7 +17,7 @@ function Example() {
     <>
       <Card style={{ width: 440 }}>
         <Title heading={6}>调试入口</Title>
-        仅开发人员调试用, 非必要无需使用：
+        仅开发人员调试用, 非必要情况下无需使用：
         <Row style={{ marginTop: 20 }}>
           <Popconfirm
             title="确定清空数据库?"

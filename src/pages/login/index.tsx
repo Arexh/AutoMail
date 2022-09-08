@@ -10,20 +10,23 @@ function Login() {
   }, []);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.logo}>
-        <Logo />
-        <div className={styles['logo-text']}>Arco Design Pro</div>
-      </div>
-      <div className={styles.content}>
-        <div className={styles['content-inner']}>
-          <LoginForm />
+    <>
+      <div className={styles.header} />
+      <div className={styles.container}>
+        <div className={styles.logo}>
+          <Logo />
+          <div className={styles['logo-text']}>Arco Design Pro</div>
         </div>
-        <div className={styles.footer}>
-          <Footer />
+        <div className={styles.content}>
+          <div className={styles['content-inner']}>
+            <LoginForm />
+          </div>
+          <div className={styles.footer}>
+            <Footer />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 Login.displayName = 'LoginPage';
