@@ -22,6 +22,7 @@ import {
   IconDashboard,
   IconInteraction,
   IconTag,
+  IconRefresh,
 } from '@arco-design/web-react/icon';
 import { useSelector, useDispatch } from 'react-redux';
 import { GlobalState } from '@/store';
@@ -183,6 +184,12 @@ function Navbar({ show }: { show: boolean }) {
             <IconButton icon={<IconNotification />} />
           </MessageBox>
         </li> */}
+        <li>
+          <IconButton
+            icon={<IconRefresh />}
+            onClick={() => location.reload()}
+          />
+        </li>
         <li>
           <Tooltip
             content={
