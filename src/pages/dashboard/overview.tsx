@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect, ReactNode, useCallback } from 'react';
 import {
   Grid,
   Card,
@@ -6,6 +6,8 @@ import {
   Divider,
   Skeleton,
   Link,
+  Select,
+  Form,
 } from '@arco-design/web-react';
 import { useSelector } from 'react-redux';
 import { IconCaretUp } from '@arco-design/web-react/icon';
@@ -18,8 +20,11 @@ import IconCalendar from './assets/calendar.svg';
 import IconComments from './assets/comments.svg';
 import IconContent from './assets/content.svg';
 import IconIncrease from './assets/increase.svg';
+import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
+import dayjs from 'dayjs';
 
 const { Row, Col } = Grid;
+const { useForm } = Form;
 
 type StatisticItemType = {
   icon?: ReactNode;
@@ -56,99 +61,128 @@ type DataType = {
   down?: boolean;
 };
 
+type ChartDataType = {
+  count?: number;
+  date?: string;
+}[];
+
 function Overview() {
   const [data, setData] = useState<DataType>({});
+  const [chartData, setChartData] = useState<ChartDataType>([]);
   const [loading, setLoading] = useState(true);
   const t = useLocale(locale);
 
   const userInfo = useSelector((state: any) => state.userInfo || {});
+  const [options, setOptions] = useState([]);
+  const [form] = useForm();
 
-  const fetchData = () => {
+  const fetchChapterIds = () => {
+    zhiHuiTuanJianApi.getDaXueXiChapter().then((res) => {
+      setOptions(
+        res.data.data.list.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }))
+      );
+      form.setFieldValue('chapterId', options[0]['value']);
+    });
+  };
+
+  const fetchTable = () => {
     setLoading(true);
-    axios
-      .get('/api/workplace/overview-content')
-      .then((res) => {
-        setData(res.data);
+    const formParams = {
+      chapterId: form.getFieldValue('chapterId'),
+      pageSize: 99999,
+    };
+    zhiHuiTuanJianApi
+      .getDaXueXiTable(userInfo.oid, {
+        ...formParams,
       })
-      .finally(() => {
+      .then((res) => {
+        const chartData = {};
+        res.data.data.list.forEach((item) => {
+          const date = dayjs(item.createDate).format('YYYY-MM-DD');
+          if (!(date in chartData)) {
+            chartData[date] = 1;
+          } else {
+            chartData[date]++;
+          }
+        });
+        const dataArray = [];
+        for (const date in chartData) {
+          if (chartData.hasOwnProperty(date)) {
+            dataArray.push({ date: date, count: chartData[date] });
+          }
+        }
+        console.log(dataArray);
+        setChartData(dataArray);
         setLoading(false);
       });
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    console.log(form.getFields());
+    if (options.length != 0) {
+      if (form.getFieldValue('chapterId') == null) {
+        form.setFieldValue('chapterId', options[0]['value']);
+      }
+      return;
+    }
+    fetchChapterIds();
+    fetchTable();
+  }, [options]);
+
+  const fetchChapter = useCallback(() => {
+    zhiHuiTuanJianApi.getDaXueXiChapter().then((res) => {
+      setOptions(
+        res.data.data.list.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }))
+      );
+    });
+  }, [options]);
+
+  const handleSubmit = (e) => {
+    fetchTable();
+  };
 
   return (
     <Card>
-      <Typography.Title heading={5}>
-        {t['workplace.welcomeBack']}
-        {userInfo.username}
-      </Typography.Title>
-      <Divider />
-      <Row>
-        <Col flex={1}>
-          <StatisticItem
-            icon={<IconCalendar />}
-            title={t['workplace.totalOnlyData']}
-            count={data.allContents}
-            loading={loading}
-            unit={t['workplace.pecs']}
-          />
-        </Col>
-        <Divider type="vertical" className={styles.divider} />
-        <Col flex={1}>
-          <StatisticItem
-            icon={<IconContent />}
-            title={t['workplace.contentInMarket']}
-            count={data.liveContents}
-            loading={loading}
-            unit={t['workplace.pecs']}
-          />
-        </Col>
-        <Divider type="vertical" className={styles.divider} />
-        <Col flex={1}>
-          <StatisticItem
-            icon={<IconComments />}
-            title={t['workplace.comments']}
-            count={data.increaseComments}
-            loading={loading}
-            unit={t['workplace.pecs']}
-          />
-        </Col>
-        <Divider type="vertical" className={styles.divider} />
-        <Col flex={1}>
-          <StatisticItem
-            icon={<IconIncrease />}
-            title={t['workplace.growth']}
-            count={
-              <span>
-                {data.growthRate}{' '}
-                <IconCaretUp
-                  style={{ fontSize: 18, color: 'rgb(var(--green-6))' }}
-                />
-              </span>
-            }
-            loading={loading}
-          />
-        </Col>
-      </Row>
-      <Divider />
       <div>
-        <div className={styles.ctw}>
-          <Typography.Paragraph
-            className={styles['chart-title']}
-            style={{ marginBottom: 0 }}
-          >
-            {t['workplace.contentData']}
-            <span className={styles['chart-sub-title']}>
-              ({t['workplace.1year']})
-            </span>
-          </Typography.Paragraph>
-          <Link>{t['workplace.seeMore']}</Link>
-        </div>
-        <OverviewAreaLine data={data.chartData} loading={loading} />
+        <Typography.Title
+          heading={5}
+          style={{ display: 'inline', float: 'left' }}
+        >
+          {t['workplace.welcomeBack']}
+          {userInfo.username}
+        </Typography.Title>
+        <Form
+          style={{ float: 'right', width: 300, marginRight: 0 }}
+          form={form}
+        >
+          <Form.Item style={{ width: 300 }} field="chapterId">
+            <Select
+              style={{ width: 300 }}
+              allowClear={false}
+              placeholder={'选择大学习期数'}
+              onFocus={fetchChapter}
+              onChange={handleSubmit}
+              options={options}
+            />
+          </Form.Item>
+        </Form>
       </div>
+      <Divider />
+      <div className={styles.ctw}>
+        <Typography.Paragraph
+          className={styles['chart-title']}
+          style={{ marginBottom: 0, marginTop: 0 }}
+        >
+          学习数统计
+        </Typography.Paragraph>
+      </div>
+      <OverviewAreaLine data={chartData} loading={loading} />
     </Card>
   );
 }

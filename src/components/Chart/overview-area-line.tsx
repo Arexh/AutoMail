@@ -6,7 +6,7 @@ import CustomTooltip from './customer-tooltip';
 function OverviewAreaLine({
   data,
   loading,
-  name = '总内容量',
+  name = '学习数',
   color = '#4080FF',
 }: {
   data: any[];
@@ -26,17 +26,11 @@ function OverviewAreaLine({
       >
         <Axis
           name="count"
-          title
           grid={{
             line: {
               style: {
                 lineDash: [4, 4],
               },
-            },
-          }}
-          label={{
-            formatter(text) {
-              return `${Number(text) / 1000}k`;
             },
           }}
         />
