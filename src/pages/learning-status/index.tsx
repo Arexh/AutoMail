@@ -17,6 +17,7 @@ import { zhiHuiTuanJianDb } from '@/db/zhiHuiTuanJianDb';
 import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
 import { useSelector } from 'react-redux';
 import * as XLSX from 'xlsx';
+import dayjs from 'dayjs';
 
 const MAIL_BTN_TEXT = '第五步: 向未学习同学发送邮件';
 const { Title } = Typography;
@@ -315,9 +316,49 @@ function SearchTable() {
     console.log(successMails);
     console.log(failMails);
     console.log(rejectedReasons);
+    const summary = [];
+    successMails.forEach((item) => {
+      const searchResult = emailsToSend.find(
+        (element) => element.address == item
+      );
+      summary.push({
+        大学习期数: dataName,
+        姓名: searchResult ? searchResult.name : '-',
+        邮箱: item,
+        状态: '发送成功',
+        时间: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        失败原因: '-',
+      });
+    });
+    for (let i = 0; i < failMails.length; i++) {
+      const searchResult = emailsToSend.find(
+        (element) => element.address == failMails[i]
+      );
+      summary.push({
+        大学习期数: dataName,
+        姓名: searchResult ? searchResult.name : '-',
+        邮箱: failMails[i],
+        状态: '发送失败',
+        时间: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        失败原因: rejectedReasons[i].message
+          ? rejectedReasons[i].message
+          : rejectedReasons[i],
+      });
+    }
+    const batchData = summary.map((item) => {
+      return {
+        dataName: item['大学习期数'],
+        name: item['姓名'],
+        email: item['邮箱'],
+        status: item['状态'],
+        time: item['时间'],
+        reason: item['失败原因'],
+      };
+    });
+    zhiHuiTuanJianDb.table('sendLogs').bulkPut(batchData);
     Notification.info({
       closable: true,
-      title: '邮件发送情况汇总',
+      title: '邮件发送情况',
       content: `共 ${emailsToSend.length} 个收件人, ${successMails.length} 个邮箱发送成功, ${failMails.length} 个邮箱发送失败.`,
     });
   }

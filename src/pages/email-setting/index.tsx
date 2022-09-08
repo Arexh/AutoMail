@@ -26,10 +26,12 @@ function Example() {
   const [emailSettingForm] = useForm();
   const [testSendDisabled, setTestSendDisabled] = useState(true);
 
+  console.log(zhiHuiTuanJianDb.table('settings'));
   zhiHuiTuanJianDb
     .table('settings')
     .toArray()
     .then((array) => {
+      console.log(array);
       const settings = array.map((item) => {
         return {
           [item['settingName']]: item['value'],

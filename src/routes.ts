@@ -28,6 +28,10 @@ export const routes: IRoute[] = [
     name: '学习情况',
     key: 'learning-status',
   },
+  {
+    name: '发送日志',
+    key: 'log-table',
+  },
 ];
 
 export const getName = (path: string, routes) => {

@@ -5,6 +5,7 @@ import cs from 'classnames';
 import {
   IconDashboard,
   IconEmail,
+  IconFile,
   IconMenuFold,
   IconMenuUnfold,
   IconSelectAll,
@@ -38,6 +39,8 @@ function getIconFromKey(key) {
       return <IconUserGroup className={styles.icon} />;
     case 'learning-status':
       return <IconSelectAll className={styles.icon} />;
+    case 'log-table':
+      return <IconFile className={styles.icon} />;
     default:
       return <div className={styles['icon-empty']} />;
   }
