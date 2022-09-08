@@ -13,10 +13,10 @@ Quill.register('modules/imageResize', ImageResize);
 class Editor extends React.Component {
   constructor(props) {
     super(props);
+    this.oid = props.oid;
     zhiHuiTuanJianDb
       .table('settings')
-      .where('settingName')
-      .equalsIgnoreCase('template')
+      .where({ oid: this.oid, settingName: 'template' })
       .toArray()
       .then((array) => {
         console.log(array);
@@ -38,6 +38,7 @@ class Editor extends React.Component {
   handleSaveTemplate() {
     Message.success('邮件模板保存成功！');
     zhiHuiTuanJianDb.table('settings').put({
+      oid: this.oid,
       settingName: 'template',
       value: this.state.editorHtml,
     });

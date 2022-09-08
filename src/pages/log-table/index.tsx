@@ -14,12 +14,14 @@ import * as XLSX from 'xlsx';
 import { zhiHuiTuanJianDb } from '@/db/zhiHuiTuanJianDb';
 import { useLiveQuery } from 'dexie-react-hooks';
 import Fuse from 'fuse.js';
+import { useSelector } from 'react-redux';
 
 const { Title } = Typography;
 
 function SearchTable() {
   const t = useLocale(locale);
   const searchInputRef = React.useRef(null);
+  const userInfo = useSelector((state: any) => state.userInfo || {});
   const columns = [
     {
       title: '大学习期数',
@@ -86,7 +88,11 @@ function SearchTable() {
   const [formParams, setFormParams] = useState({});
   const [displayMember, setDisplayMember] = useState([]);
   const members = useLiveQuery(() => {
-    const result = zhiHuiTuanJianDb.table('sendLogs').toArray();
+    const result = zhiHuiTuanJianDb
+      .table('sendLogs')
+      .where('oid')
+      .equals(userInfo.oid)
+      .toArray();
     result.then((res) => {
       console.log(res);
       displayFilteredContent(res.reverse());

@@ -157,6 +157,15 @@ function Overview() {
           {t['workplace.welcomeBack']}
           {userInfo.username}
         </Typography.Title>
+      </div>
+      <Divider />
+      <div className={styles.ctw}>
+        <Typography.Paragraph
+          className={styles['chart-title']}
+          style={{ marginBottom: 0, marginTop: 0 }}
+        >
+          学习数统计
+        </Typography.Paragraph>
         <Form
           style={{ float: 'right', width: 300, marginRight: 0 }}
           form={form}
@@ -172,15 +181,6 @@ function Overview() {
             />
           </Form.Item>
         </Form>
-      </div>
-      <Divider />
-      <div className={styles.ctw}>
-        <Typography.Paragraph
-          className={styles['chart-title']}
-          style={{ marginBottom: 0, marginTop: 0 }}
-        >
-          学习数统计
-        </Typography.Paragraph>
       </div>
       <OverviewAreaLine data={chartData} loading={loading} />
     </Card>

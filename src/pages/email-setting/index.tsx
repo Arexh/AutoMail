@@ -16,6 +16,7 @@ import Editor from '@/components/Editor';
 import { zhiHuiTuanJianDb } from '@/db/zhiHuiTuanJianDb';
 import isElectron from 'is-electron';
 import { IconQuestionCircle } from '@arco-design/web-react/icon';
+import { useSelector } from 'react-redux';
 
 const { Title } = Typography;
 const { Row } = Grid;
@@ -25,8 +26,8 @@ const { useForm } = Form;
 function Example() {
   const [emailSettingForm] = useForm();
   const [testSendDisabled, setTestSendDisabled] = useState(true);
+  const userInfo = useSelector((state: any) => state.userInfo || {});
 
-  console.log(zhiHuiTuanJianDb.table('settings'));
   zhiHuiTuanJianDb
     .table('settings')
     .toArray()
@@ -70,9 +71,10 @@ function Example() {
       Message.success('邮件设置保存成功！请点击"发送测试邮件"按钮测试!');
     }
     const batchData = Object.keys(settingDict).map((i) => {
-      return { settingName: i, value: settingDict[i] };
+      return { oid: userInfo.oid, settingName: i, value: settingDict[i] };
     });
-    batchData.forEach((item) => zhiHuiTuanJianDb.table('settings').put(item));
+    console.log(batchData);
+    zhiHuiTuanJianDb.table('settings').bulkPut(batchData);
   };
   const handleSendTestMail = () => {
     if (isElectron()) {
@@ -276,7 +278,7 @@ function Example() {
           <Title heading={6}>第二步：邮件模板（必填）</Title>
           未完成大学习的成员将收到以下内容：
           <div style={{ marginTop: 16 }}>
-            <Editor defaultValue="" />
+            <Editor oid={userInfo.oid} defaultValue="" />
           </div>
         </Card>
       </Row>

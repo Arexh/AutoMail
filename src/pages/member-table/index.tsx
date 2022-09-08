@@ -17,6 +17,7 @@ import { zhiHuiTuanJianDb } from '@/db/zhiHuiTuanJianDb';
 import { useLiveQuery } from 'dexie-react-hooks';
 import Fuse from 'fuse.js';
 import { IconDelete, IconEdit } from '@arco-design/web-react/icon';
+import { useSelector } from 'react-redux';
 
 const { Title } = Typography;
 const exportTableFileName = '团支部-成员名单.xlsx';
@@ -25,6 +26,7 @@ const emailRegex = new RegExp(/^\d{8}@mail.sustech.edu.cn$/);
 function SearchTable() {
   const t = useLocale(locale);
   const searchInputRef = React.useRef(null);
+  const userInfo = useSelector((state: any) => state.userInfo || {});
   const columns = [
     {
       title: '学号',
@@ -77,8 +79,8 @@ function SearchTable() {
           onOk={() => {
             zhiHuiTuanJianDb
               .table('members')
-              .where('studentId')
-              .equals(record.studentId)
+              .where(['oid', 'studentId'])
+              .equals([userInfo.oid, record.studentId])
               .delete();
             Notification.success({
               closable: false,
@@ -104,7 +106,11 @@ function SearchTable() {
   const [formParams, setFormParams] = useState({});
   const [displayMember, setDisplayMember] = useState([]);
   const members = useLiveQuery(() => {
-    const result = zhiHuiTuanJianDb.table('members').toArray();
+    const result = zhiHuiTuanJianDb
+      .table('members')
+      .where('oid')
+      .equals(userInfo.oid)
+      .toArray();
     result.then((res) => {
       displayFilteredContent(res);
     });
@@ -147,6 +153,7 @@ function SearchTable() {
   function setTableData(data) {
     const batchData = data.map((value) => {
       return {
+        oid: userInfo.oid,
         studentId: value.studentId,
         name: value.name,
         email: value.email,
@@ -160,7 +167,11 @@ function SearchTable() {
   }
 
   function onDeleteTable() {
-    zhiHuiTuanJianDb.table('members').clear();
+    zhiHuiTuanJianDb
+      .table('members')
+      .where('oid')
+      .equals(userInfo.oid)
+      .delete();
   }
 
   function onExportTable() {

@@ -153,7 +153,11 @@ function SearchTable() {
         ...formParams,
       })
       .then(async (res) => {
-        const members = await zhiHuiTuanJianDb.table('members').toArray();
+        const members = await zhiHuiTuanJianDb
+          .table('members')
+          .where('oid')
+          .equals(userInfo.oid)
+          .toArray();
         const emailMap = {};
         const politicalStatusMap = {};
         const completeList = [];
@@ -239,7 +243,11 @@ function SearchTable() {
         };
       });
     setMailBtnLoading(true);
-    const settingArray = await zhiHuiTuanJianDb.table('settings').toArray();
+    const settingArray = await zhiHuiTuanJianDb
+      .table('settings')
+      .where('oid')
+      .equals(userInfo.oid)
+      .toArray();
     const emailSettings = {};
     settingArray.forEach((item) => {
       emailSettings[item['settingName']] = item['value'];
@@ -347,6 +355,7 @@ function SearchTable() {
     }
     const batchData = summary.map((item) => {
       return {
+        oid: userInfo.oid,
         dataName: item['大学习期数'],
         name: item['姓名'],
         email: item['邮箱'],
