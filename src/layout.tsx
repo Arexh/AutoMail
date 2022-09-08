@@ -3,6 +3,7 @@ import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import { Layout, Menu, Breadcrumb, Spin } from '@arco-design/web-react';
 import cs from 'classnames';
 import {
+  IconCode,
   IconDashboard,
   IconEmail,
   IconFile,
@@ -41,6 +42,8 @@ function getIconFromKey(key) {
       return <IconSelectAll className={styles.icon} />;
     case 'log-table':
       return <IconFile className={styles.icon} />;
+    case 'debug':
+      return <IconCode className={styles.icon} />;
     default:
       return <div className={styles['icon-empty']} />;
   }

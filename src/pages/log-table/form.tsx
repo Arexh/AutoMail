@@ -22,7 +22,7 @@ function SearchForm(props: {
             <Input
               ref={props.searchInputRef}
               allowClear
-              placeholder="搜索学号或姓名"
+              placeholder="搜索姓名或邮箱"
               onChange={props.onSearch}
               onClear={() => {
                 props.searchInputRef.current.dom.value = '';

@@ -5,4 +5,3 @@ zhiHuiTuanJianDb.version(1).stores({
   settings: '&settingName, value',
   sendLogs: '++id, dataName, name, email, status, time, reason',
 });
-// Dexie.delete('zhiHuiTuanJianDb');

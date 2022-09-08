@@ -32,6 +32,10 @@ export const routes: IRoute[] = [
     name: '发送日志',
     key: 'log-table',
   },
+  {
+    name: '开发调试',
+    key: 'debug',
+  },
 ];
 
 export const getName = (path: string, routes) => {
