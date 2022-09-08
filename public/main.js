@@ -20,9 +20,12 @@ function createWindow() {
     },
     menu: null,
     titleBarStyle: 'hiddenInset',
+    minWidth: 1400,
+    minHeight: 800,
+    width: 1500,
+    height: 900,
   });
 
-  mainWindow.maximize();
   // and load the index.html of the app.
   // win.loadFile("index.html");
   // mainWindow.loadURL(`file://${__dirname}\\index.html`);
