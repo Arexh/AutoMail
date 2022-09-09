@@ -99,29 +99,22 @@
     ]
   },
   "build": {
-    "productName": "automail",
-    "appId": "SUSTech-ShuDe",
+    "productName": "AutoMail",
+    "appId": "sustech.shude.automail",
     "directories": {
-      "output": "builder"
+      "output": "out"
     },
-    "win": {
-      "target": [
-        "nsis",
-        "zip"
-      ]
+    "mac": {
+      "target": "dmg"
     },
-    "nsis": {
-      "shortcutName": "makalo-cnblog-tool",
-      "oneClick": false,
-      "perMachine": true,
-      "allowElevation": true,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+    "dmg": {
+      "backgroundColor": "#fff"
     },
+    "extends": null,
     "files": [
       "build/**/*",
-      "main.js"
+      "public/main.js",
+      "public/preload.js"
     ]
   }
 }
