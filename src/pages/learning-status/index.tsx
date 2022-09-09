@@ -265,11 +265,11 @@ function SearchTable() {
     const mailBatchSize = emailSettings['batchSize'];
     const mailContent = {
       from: {
-        name: '测试',
+        name: emailSettings['sender'],
         address: emailSettings['eA'],
       },
       subject: dataName + '-未学习提醒邮件',
-      text: '青年大学习提醒',
+      text: dataName + '学习提醒',
       html: mailTemplate,
     };
     const tasks = [];

@@ -44,7 +44,8 @@ function Example() {
         !settingDict.eA ||
         !settingDict.eP ||
         !settingDict.eS ||
-        !settingDict.p
+        !settingDict.p ||
+        !settingDict.sender
       ) {
         setTestSendDisabled(true);
       } else {
@@ -62,7 +63,8 @@ function Example() {
       !settingDict.eA ||
       !settingDict.eP ||
       !settingDict.eS ||
-      !settingDict.p
+      !settingDict.p ||
+      !settingDict.sender
     ) {
       setTestSendDisabled(true);
       Message.error('邮箱设置不能为空!');
@@ -92,7 +94,7 @@ function Example() {
             },
           },
           {
-            from: `"测试发件人姓名" <${emailSettings.eA}>`, // sender address
+            from: `${emailSettings.sender} <${emailSettings.eA}>`, // sender address
             to: emailSettings.eA,
             subject: '测试邮件标题',
             text: '文本内容',
@@ -191,6 +193,19 @@ function Example() {
                   ]}
                 >
                   <InputNumber placeholder="请输入邮箱服务器端口号..." />
+                </FormItem>
+                <FormItem
+                  label="发件人"
+                  field="sender"
+                  rules={[
+                    {
+                      type: 'string',
+                      required: true,
+                      message: '发件人不能为空',
+                    },
+                  ]}
+                >
+                  <Input placeholder="请输入邮件的发件人名称..." />
                 </FormItem>
                 <FormItem
                   label={
