@@ -2,9 +2,10 @@ import ReactQuill, { Quill } from 'react-quill';
 import React from 'react';
 import 'react-quill/dist/quill.snow.css';
 import ImageResize from 'quill-image-resize-module-react';
-import { IconSave } from '@arco-design/web-react/icon';
+import { IconRefresh, IconSave } from '@arco-design/web-react/icon';
 import { Button, Message } from '@arco-design/web-react';
 import { zhiHuiTuanJianDb } from '@/db/zhiHuiTuanJianDb';
+import defaultContent from './defaultContent.txt';
 
 Quill.register('modules/imageResize', ImageResize);
 /*
@@ -28,6 +29,8 @@ class Editor extends React.Component {
     this.state = { editorHtml: props.defaultValue };
     this.handleChange = this.handleChange.bind(this);
     this.handleSaveTemplate = this.handleSaveTemplate.bind(this);
+    this.handleRestoreDefaultContent =
+      this.handleRestoreDefaultContent.bind(this);
     this.contents = '';
   }
 
@@ -42,6 +45,20 @@ class Editor extends React.Component {
       settingName: 'template',
       value: this.state.editorHtml,
     });
+  }
+
+  handleRestoreDefaultContent() {
+    fetch(defaultContent)
+      .then((r) => r.text())
+      .then((text) => {
+        zhiHuiTuanJianDb.table('settings').put({
+          oid: this.oid,
+          settingName: 'template',
+          value: text,
+        });
+        this.setState({ editorHtml: text });
+        Message.success('恢复默认模板成功!');
+      });
   }
 
   render() {
@@ -62,6 +79,14 @@ class Editor extends React.Component {
           onClick={this.handleSaveTemplate}
         >
           保存
+        </Button>
+        <Button
+          type="default"
+          icon={<IconRefresh />}
+          style={{ marginLeft: '1em', marginTop: '1em' }}
+          onClick={this.handleRestoreDefaultContent}
+        >
+          恢复默认模板
         </Button>
       </div>
     );
