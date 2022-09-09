@@ -2,6 +2,17 @@ import React from 'react';
 import { Chart, Line, Axis, Area, Tooltip } from 'bizcharts';
 import { Spin } from '@arco-design/web-react';
 import CustomTooltip from './customer-tooltip';
+import dayjs from 'dayjs';
+
+const weekChineseName = [
+  '周日',
+  '周一',
+  '周二',
+  '周三',
+  '周四',
+  '周五',
+  '周六',
+];
 
 function OverviewAreaLine({
   data,
@@ -17,7 +28,19 @@ function OverviewAreaLine({
   return (
     <Spin loading={loading} style={{ width: '100%' }}>
       <Chart
-        scale={{ value: { min: 0 } }}
+        scale={{
+          value: { min: 0 },
+          date: {
+            type: 'timeCat',
+            formatter: (d) => {
+              const dayjsObj = dayjs(d);
+              return `${dayjsObj.format('YYYY-MM-DD')} ${
+                weekChineseName[parseInt(dayjsObj.format('d'))]
+              }`;
+            },
+          },
+          mask: 'YYYY-MM-DD',
+        }}
         padding={[10, 20, 50, 40]}
         autoFit
         height={300}
