@@ -11,6 +11,7 @@ import {
   Message,
   Slider,
   Popover,
+  Link,
 } from '@arco-design/web-react';
 import Editor from '@/components/Editor';
 import { zhiHuiTuanJianDb } from '@/db/zhiHuiTuanJianDb';
@@ -18,7 +19,7 @@ import isElectron from 'is-electron';
 import { IconQuestionCircle } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 const { Row } = Grid;
 const FormItem = Form.Item;
 const { useForm } = Form;
@@ -295,6 +296,47 @@ function Example() {
           }}
         >
           <Title heading={6}>{'《邮箱配置指南》'}</Title>
+          <Paragraph>发件人邮箱配置可参考以下指南配置:</Paragraph>
+          <Title heading={6}>1. 账号、密码</Title>
+          <Paragraph>
+            填写邮箱地址 (...@mail.com), 邮箱登录密码 (即登录邮箱网页的密码).
+          </Paragraph>
+          <Paragraph>
+            若邮箱已开启安全登录, 仍可以使用客户端密码来登录 (如腾讯企业邮箱,{' '}
+            <Link
+              onClick={() => {
+                window.ipcRenderer.invoke(
+                  'openUrl',
+                  'https://jingyan.baidu.com/article/624e745941fb8175e9ba5a24.html'
+                );
+              }}
+            >
+              教程链接
+            </Link>
+            ).
+          </Paragraph>
+          <Title heading={6}>2. 服务器、端口号</Title>
+          <Paragraph>
+            需填写<b>发送服务器</b>的域名及端口号,
+            不同品牌的电子邮箱其发送服务器的域名和端口号也会有所不同, 可
+            <Link
+              onClick={() => {
+                window.ipcRenderer.invoke(
+                  'openUrl',
+                  'https://blog.csdn.net/gongqinglin/article/details/115975619'
+                );
+              }}
+            >
+              参考链接
+            </Link>{' '}
+            (填 SMTP 那一行).
+          </Paragraph>
+          <Paragraph>
+            如腾讯企业邮箱请填: <u>smtp.exmail.qq.com</u> (服务器), <u>443</u>{' '}
+            (端口).
+          </Paragraph>
+          <Title heading={6}>3. 发件人</Title>
+          <Paragraph>邮箱发件人名称, 例如{'"树德书院"'}.</Paragraph>
         </Card>
       </Row>
 

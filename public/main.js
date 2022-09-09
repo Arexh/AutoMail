@@ -102,6 +102,11 @@ ipcMain.handle('sendEmail', async (e, settings, contents) => {
   }
 });
 
+// open url
+ipcMain.handle('openUrl', async (e, url) => {
+  require('electron').shell.openExternal(url);
+});
+
 const isDevelopment = !app.isPackaged;
 if (isDevelopment) {
   require('electron-reload')(__dirname);
