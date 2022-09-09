@@ -19,6 +19,7 @@ const { Row, Col } = Grid;
 const { useForm } = Form;
 
 function SearchForm(props: {
+  formData: any;
   mailBtnLoading: boolean;
   mailBtnText: string;
   onSearch: (values: Record<string, any>) => void;
@@ -201,6 +202,13 @@ function SearchForm(props: {
         >
           导出完整名单
         </Button>
+        <span style={{ marginLeft: 'auto', fontSize: 15, marginRight: 30 }}>
+          已学习{' '}
+          <b>{props.formData.filter((item) => item.ifComplete).length}</b>,
+          未学习{' '}
+          <b>{props.formData.filter((item) => !item.ifComplete).length}</b>,
+          未匹配 <b>{props.formData.filter((item) => !item.email).length}</b>
+        </span>
       </div>
     </>
   );

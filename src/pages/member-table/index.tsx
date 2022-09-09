@@ -20,13 +20,13 @@ import { IconDelete, IconEdit } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
 
 const { Title } = Typography;
-const exportTableFileName = '团支部-成员名单.xlsx';
 const emailRegex = new RegExp(/^\d{8}@mail.sustech.edu.cn$/);
 
 function SearchTable() {
   const t = useLocale(locale);
   const searchInputRef = React.useRef(null);
   const userInfo = useSelector((state: any) => state.userInfo || {});
+  const exportTableFileName = userInfo.username + '-成员名单.xlsx';
   const columns = [
     {
       title: '学号',
@@ -176,6 +176,7 @@ function SearchTable() {
 
   function onExportTable() {
     let exportData = [];
+    let filename = exportTableFileName;
     if (Array.isArray(members) && members.length == 0) {
       exportData = [
         {
@@ -184,6 +185,8 @@ function SearchTable() {
           PoliticalStatus: '政治容貌(团员、预备党员或正式党员)',
         },
       ];
+      Message.info('当前成员列表为空, 将导出样例Excel名单...');
+      filename = '成员名单-样例.xlsx';
     } else {
       exportData = members.map((i) => {
         return {
@@ -197,7 +200,7 @@ function SearchTable() {
     const workbook = XLSX.utils.book_new();
     worksheet['!cols'] = [{ width: 16 }, { width: 28 }, { width: 14 }];
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Member');
-    XLSX.writeFile(workbook, exportTableFileName);
+    XLSX.writeFile(workbook, filename);
     Message.success('导出成员名单成功！');
   }
 

@@ -411,7 +411,7 @@ function SearchTable() {
             邮箱: item.email,
           };
         }),
-      `${dataName}-未学习名单.xlsx`,
+      `${userInfo.username}-${dataName}-未学习名单.xlsx`,
       [10, 30, 10, 30]
     );
     Message.success(`导出《${dataName}》未学习名单成功！`);
@@ -428,7 +428,7 @@ function SearchTable() {
           邮箱: item.email,
         };
       }),
-      `${dataName}-完整名单.xlsx`,
+      `${userInfo.username}-${dataName}-完整名单.xlsx`,
       [10, 30, 57, 10, 30]
     );
     Message.success(`导出《${dataName}》完整名单成功！`);
@@ -446,6 +446,7 @@ function SearchTable() {
     <Card>
       <Title heading={6}>{t['menu.list.searchTable']}</Title>
       <SearchForm
+        formData={data}
         mailBtnLoading={mailBtnLoading}
         mailBtnText={mailBtnText}
         getDataName={getDataName}
