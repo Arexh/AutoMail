@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import * as XLSX from 'xlsx';
 import dayjs from 'dayjs';
 
-const MAIL_BTN_TEXT = '第五步: 向未学习成员发送邮件';
+const MAIL_BTN_TEXT = '第四步: 向未学习成员发送邮件';
 const { Title } = Typography;
 const columns = [
   {

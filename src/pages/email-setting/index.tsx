@@ -112,6 +112,16 @@ function Example() {
       Message.error('请在Electron里面执行');
     }
   };
+  const handleEmptyEmailSettings = () => {
+    emailSettingForm.clearFields();
+    emailSettingForm.setFieldValue('batchSize', 50);
+    const settingDict = emailSettingForm.getFieldsValue();
+    const batchData = Object.keys(settingDict).map((i) => {
+      return { oid: userInfo.oid, settingName: i, value: settingDict[i] };
+    });
+    zhiHuiTuanJianDb.table('settings').bulkPut(batchData);
+    Message.info('已清除设置');
+  };
 
   return (
     <>
@@ -257,6 +267,13 @@ function Example() {
                   onClick={handleSaveEmailSettings}
                 >
                   保存
+                </Button>
+                <Button
+                  type="secondary"
+                  style={{ marginRight: 10 }}
+                  onClick={handleEmptyEmailSettings}
+                >
+                  清空设置
                 </Button>
                 <Button
                   onClick={handleSendTestMail}
