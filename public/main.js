@@ -25,6 +25,7 @@ function createWindow() {
     width: 1500,
     height: 900,
   });
+  mainWindow.setMenuBarVisibility(false);
 
   // and load the index.html of the app.
   // win.loadFile("index.html");
