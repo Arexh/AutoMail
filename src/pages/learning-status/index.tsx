@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import * as XLSX from 'xlsx';
 import dayjs from 'dayjs';
 
-const MAIL_BTN_TEXT = '第五步: 向未学习同学发送邮件';
+const MAIL_BTN_TEXT = '第五步: 向未学习成员发送邮件';
 const { Title } = Typography;
 const columns = [
   {
@@ -234,15 +234,6 @@ function SearchTable() {
       alert('请在Electron里面执行');
       return;
     }
-    const emailsToSend = data
-      .filter((item) => !item.ifComplete)
-      .map((item) => {
-        return {
-          name: item.name,
-          address: item.email,
-        };
-      });
-    setMailBtnLoading(true);
     const settingArray = await zhiHuiTuanJianDb
       .table('settings')
       .where('oid')
@@ -252,6 +243,31 @@ function SearchTable() {
     settingArray.forEach((item) => {
       emailSettings[item['settingName']] = item['value'];
     });
+    if (
+      !emailSettings['eA'] ||
+      !emailSettings['eP'] ||
+      !emailSettings['eS'] ||
+      !emailSettings['p'] ||
+      !emailSettings['sender']
+    ) {
+      Message.error('邮箱设置不能为空! 请配置发件邮箱!');
+      return;
+    }
+    const existMatch = data.find((item) => item.email);
+    if (!existMatch) {
+      Message.error('成员列表尚未配置! 请先上传成员名单!');
+      return;
+    }
+    console.log(existMatch);
+    const emailsToSend = data
+      .filter((item) => !item.ifComplete)
+      .map((item) => {
+        return {
+          name: item.name,
+          address: item.email,
+        };
+      });
+    setMailBtnLoading(true);
     const mailParams = {
       host: emailSettings['eS'],
       port: emailSettings['p'],

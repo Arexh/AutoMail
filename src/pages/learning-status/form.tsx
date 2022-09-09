@@ -171,7 +171,7 @@ function SearchForm(props: {
       </div>
       <div className={styles['search-form-btn-wrapper']}>
         <Popconfirm
-          title={`是否确定向未学习的${props.getUnCompleteCount()}个同学发送邮件?`}
+          title={`是否确定向未学习的${props.getUnCompleteCount()}个成员发送邮件?`}
           onOk={handleSendEmail}
         >
           {showMailBtn && (

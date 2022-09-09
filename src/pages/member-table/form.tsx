@@ -81,7 +81,7 @@ function SearchForm(props: {
         Notification.success({
           closable: false,
           title: '导入成功',
-          content: `总共${data.length}条数据, 成功导入${jsonData.length}条学生数据`,
+          content: `总共${data.length}条数据, 成功导入${jsonData.length}条成员数据`,
         });
       } else {
         Notification.error({
@@ -138,7 +138,7 @@ function SearchForm(props: {
           icon={<IconDownload />}
           onClick={props.onExportTable}
         >
-          导出学生名单
+          导出成员名单
         </Button>
         <Upload
           style={{ display: 'inline-block', width: 140 }}
@@ -151,7 +151,7 @@ function SearchForm(props: {
             type="primary"
             icon={<IconUpload />}
           >
-            上传学生名单
+            上传成员名单
           </Button>
         </Upload>
         <Popconfirm

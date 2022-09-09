@@ -179,7 +179,7 @@ function SearchTable() {
     if (Array.isArray(members) && members.length == 0) {
       exportData = [
         {
-          Name: '学生姓名',
+          Name: '成员姓名',
           Email: 'example@mail.com',
           PoliticalStatus: '政治容貌(团员、预备党员或正式党员)',
         },
@@ -198,15 +198,15 @@ function SearchTable() {
     worksheet['!cols'] = [{ width: 16 }, { width: 28 }, { width: 14 }];
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Member');
     XLSX.writeFile(workbook, exportTableFileName);
-    Message.success('导出学生名单成功！');
+    Message.success('导出成员名单成功！');
   }
 
   return (
     <Card>
       <Title heading={6}>第三步：导入、查看成员列表</Title>
       <div style={{ marginBottom: 20 }}>
-        导入关联学生姓名和学生邮箱的Excel (格式为姓名 - 邮箱 - 政治面貌),
-        不支持重名学生 (需手动发邮件):
+        导入关联成员姓名和成员邮箱的Excel (格式为姓名 - 邮箱 - 政治面貌),
+        不支持重名成员 (需手动发邮件):
         <span style={{ float: 'right', fontSize: 16 }}>
           目前共有 <b>{members ? members.length : '-'}</b> 条数据
         </span>
