@@ -69,6 +69,7 @@ type ChartDataType = {
 function Overview() {
   const [data, setData] = useState<DataType>({});
   const [chartData, setChartData] = useState<ChartDataType>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const t = useLocale(locale);
 
@@ -109,13 +110,16 @@ function Overview() {
           }
         });
         const dataArray = [];
+        let count = 0;
         for (const date in chartData) {
           if (chartData.hasOwnProperty(date)) {
             dataArray.push({ date: date, count: chartData[date] });
+            count += chartData[date];
           }
         }
         console.log(dataArray);
         setChartData(dataArray);
+        setTotalCount(count);
         setLoading(false);
       });
   };
@@ -183,6 +187,11 @@ function Overview() {
         </Form>
       </div>
       <OverviewAreaLine data={chartData} loading={loading} />
+      <div style={{ marginBottom: 0, textAlign: 'center' }}>
+        <p>
+          本期总学习数<b>{` ${totalCount}`}</b>
+        </p>
+      </div>
     </Card>
   );
 }
