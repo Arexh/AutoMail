@@ -305,10 +305,19 @@ function Example() {
             若邮箱已开启安全登录, 仍可以使用客户端密码来登录 (如腾讯企业邮箱,{' '}
             <Link
               onClick={() => {
-                window.ipcRenderer.invoke(
-                  'openUrl',
-                  'https://jingyan.baidu.com/article/624e745941fb8175e9ba5a24.html'
-                );
+                if (isElectron()) {
+                  window.ipcRenderer.invoke(
+                    'openUrl',
+                    'https://jingyan.baidu.com/article/624e745941fb8175e9ba5a24.html'
+                  );
+                } else {
+                  window
+                    .open(
+                      'https://jingyan.baidu.com/article/624e745941fb8175e9ba5a24.html',
+                      '_blank'
+                    )
+                    .focus();
+                }
               }}
             >
               教程链接
@@ -321,10 +330,19 @@ function Example() {
             不同品牌的电子邮箱其发送服务器的域名和端口号也会有所不同, 可
             <Link
               onClick={() => {
-                window.ipcRenderer.invoke(
-                  'openUrl',
-                  'https://blog.csdn.net/gongqinglin/article/details/115975619'
-                );
+                if (isElectron()) {
+                  window.ipcRenderer.invoke(
+                    'openUrl',
+                    'https://blog.csdn.net/gongqinglin/article/details/115975619'
+                  );
+                } else {
+                  window
+                    .open(
+                      'https://blog.csdn.net/gongqinglin/article/details/115975619',
+                      '_blank'
+                    )
+                    .focus();
+                }
               }}
             >
               参考链接
