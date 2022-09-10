@@ -58,7 +58,7 @@ zhiHuiTuanJianApi.getLoginValidCode = () => {
   return service({
     url: `/api/zhihuituanjian/login/loginValidCode`,
     method: 'get',
-    responseType: 'blob',
+    responseType: 'arraybuffer',
   });
 };
 

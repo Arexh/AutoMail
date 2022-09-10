@@ -75,6 +75,14 @@ ipcMain.handle('request', async (_, axiosParams) => {
       ? await client.get(url, axiosParams)
       : await client.post(url, axiosParams);
   console.log('request done');
+  if (axiosParams['responseType'] == 'arraybuffer') {
+    console.log(result);
+    console.log(Buffer.from(result.data).toString('base64'));
+    return {
+      status: result.status,
+      data: Buffer.from(result.data).toString('base64'),
+    };
+  }
   return {
     status: result.status,
     data: result.data,

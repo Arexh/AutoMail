@@ -5,6 +5,7 @@ import {
   Link,
   Button,
   Space,
+  Image,
 } from '@arco-design/web-react';
 import { FormInstance } from '@arco-design/web-react/es/Form';
 import { IconLock, IconUser } from '@arco-design/web-react/icon';
@@ -15,6 +16,7 @@ import locale from './locale';
 import styles from './style/index.module.less';
 import zhiHuiTuanJianApi from '@/api/zhiHuiTuanJian';
 import { useHistory } from 'react-router-dom';
+import isElectron from 'is-electron';
 
 export default function LoginForm() {
   const formRef = useRef<FormInstance>();
@@ -31,13 +33,17 @@ export default function LoginForm() {
 
   const handleGetLoginValidCode = () => {
     formRef.current.setFieldValue('loginValidCode', undefined);
+    console.log('login valid code');
     zhiHuiTuanJianApi.getLoginValidCode().then((res) => {
-      const binaryData = [];
-      binaryData.push(res.data);
-      const image = (window.URL ? URL : webkitURL).createObjectURL(
-        new Blob(binaryData)
-      );
-      setLoginValidCodeImg(image);
+      console.log(res.data.length);
+      if (isElectron()) {
+        setLoginValidCodeImg('data:image/jpeg;base64,' + res.data);
+      } else {
+        const base64 = btoa(
+          String.fromCharCode.apply(null, new Uint8Array(res.data))
+        );
+        setLoginValidCodeImg('data:image/jpeg;base64,' + base64);
+      }
     });
   };
 
@@ -81,6 +87,7 @@ export default function LoginForm() {
           setLoading(false);
         });
     } else {
+      console.log(loginValidCode);
       zhiHuiTuanJianApi
         .loginWithValid(username, password, loginValidCode)
         .then((res) => {
@@ -141,23 +148,33 @@ export default function LoginForm() {
             onPressEnter={onSubmitClick}
           />
         </Form.Item>
-        <Form.Item
-          className={loginValidCodeImg ? undefined : styles['hide']}
-          field="loginValidCode"
-          style={{
-            width: '320px',
-          }}
-        >
-          <Input placeholder="请输入验证码..." />
-        </Form.Item>
-        {loginValidCodeImg && (
-          <img
+        <div style={{ display: 'flex' }}>
+          <Form.Item
+            className={loginValidCodeImg ? undefined : styles['hide']}
+            field="loginValidCode"
             style={{
-              width: '100px',
+              width: '220px',
             }}
-            src={loginValidCodeImg}
-          />
-        )}
+          >
+            <Input
+              style={{
+                width: 220,
+              }}
+              placeholder="请输入验证码..."
+            />
+          </Form.Item>
+          {loginValidCodeImg && (
+            <Image
+              style={{
+                display: 'inline',
+                height: '100%',
+                marginLeft: 10,
+                padding: 1,
+              }}
+              src={loginValidCodeImg}
+            />
+          )}
+        </div>
         <Space size={16} direction="vertical">
           <div className={styles['login-form-password-actions']}>
             <Checkbox checked={rememberPassword} onChange={setRememberPassword}>
