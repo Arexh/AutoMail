@@ -1,14 +1,16 @@
-# Arco Design Pro
+# 青年大学习邮件提醒系统
 
-## 快速开始
+## 开发 - 快速开始
 
-```
+```bash
 // 初始化项目
-npm install
+yarn install
 
-// 开发模式
-npm run dev
+// 开发模式: 打开前端服务器 + 开启Electron窗口
+yarn start
+yarn electron
 
-// 构建
-npm run build
+// 打包: 打包React + 打包Electron
+yarn build
+yarn build-electron
 ```

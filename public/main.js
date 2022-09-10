@@ -6,13 +6,15 @@ const { wrapper } = require('axios-cookiejar-support');
 const { CookieJar } = require('tough-cookie');
 const { HttpsCookieAgent } = require('http-cookie-agent/http');
 
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
 const isDev = process.env.NODE_ENV == 'development';
+
+let mainWindow;
 
 // https://github.com/blazer233/Today-wallpapers/blob/master/public/electron.js
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
       preload: __dirname + '/preload.js',
@@ -121,7 +123,13 @@ if (isDevelopment) {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  globalShortcut.register('Command+Shift+I', function () {
+    mainWindow.webContents.openDevTools({ mode: 'right' });
+    mainWindow.webContents.dev;
+  });
+  createWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bars to stay active until the user quits
