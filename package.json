@@ -108,7 +108,12 @@
       "output": "out"
     },
     "win": {
-      "icon": "public/icons/icon.ico"
+      "icon": "public/icons/icon.ico",
+      "target": [
+        {
+          "target": "nsis"
+        }
+      ]
     },
     "mac": {
       "target": "dmg"
@@ -121,6 +126,12 @@
       "build/**/*",
       "public/main.js",
       "public/preload.js"
-    ]
+    ],
+    "nsis": {
+      "oneClick": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "大学习一键邮件提醒"
+    }
   }
 }
