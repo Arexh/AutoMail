@@ -278,6 +278,10 @@ function SearchTable() {
       },
     };
     const mailTemplate = emailSettings['template'];
+    if (!mailTemplate) {
+      Message.error('邮件模板为空! 请先配置邮件模板!');
+      return;
+    }
     const mailBatchSize = emailSettings['batchSize'];
     const mailContent = {
       from: {
